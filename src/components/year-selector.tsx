@@ -1,6 +1,7 @@
 "use client";
 
 import { parseAsInteger, useQueryState } from "nuqs";
+import { useSearchParams } from "next/navigation";
 import { ChevronDown, Calendar } from "lucide-react";
 import {
   DropdownMenu,
@@ -9,14 +10,12 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { Button } from "./ui/button";
+import { loadSearchParams } from "~/lib/search-params";
 
-export default function YearSelector({
-  currentYear,
-  years,
-}: {
-  currentYear: number;
-  years: number[];
-}) {
+export default function YearSelector({ years }: { years: number[] }) {
+  const searchParams = useSearchParams();
+  const currentYear = loadSearchParams(searchParams).year;
+
   const [year, setYear] = useQueryState(
     "year",
     parseAsInteger.withDefault(currentYear).withOptions({ shallow: false }),
