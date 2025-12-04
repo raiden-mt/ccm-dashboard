@@ -1,27 +1,8 @@
-"use client";
-
-import { Button } from "~/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "~/components/ui/dropdown-menu";
-import { ChevronDown, User } from "lucide-react";
 import Image from "next/image";
+import YearSelector from "./year-selector";
 
-type UserRole = "tom_sally" | "geoff_nikki";
-
-interface HeaderProps {
-  currentRole: UserRole;
-  onRoleChange: (role: UserRole) => void;
-}
-
-export function DashboardHeader({ currentRole, onRoleChange }: HeaderProps) {
-  const roleLabels: Record<UserRole, string> = {
-    tom_sally: "Tom / Sally (Full Access)",
-    geoff_nikki: "Geoff / Nikki (Executive Dashboard)",
-  };
+export function DashboardHeader() {
+  const years = [2020, 2021, 2022, 2023, 2024, 2025];
 
   return (
     <header className="border-border bg-primary border-b">
@@ -39,26 +20,7 @@ export function DashboardHeader({ currentRole, onRoleChange }: HeaderProps) {
         </div>
 
         <div className="flex items-center gap-4">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                className="border-primary-foreground/30 bg-primary-foreground/10 text-primary-foreground hover:bg-primary-foreground/20 hover:text-primary-foreground gap-2"
-              >
-                <User className="h-4 w-4" />
-                {roleLabels[currentRole]}
-                <ChevronDown className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => onRoleChange("tom_sally")}>
-                Tom / Sally (Full Access)
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => onRoleChange("geoff_nikki")}>
-                Geoff / Nikki (Executive Dashboard)
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <YearSelector currentYear={2025} years={years} />
         </div>
       </div>
     </header>

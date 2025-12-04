@@ -18,13 +18,13 @@ import { CoordinatorReports } from "~/components/coordinator-reports";
 import { NotActiveSection } from "~/components/not-active-section";
 import { ArchivedSection } from "~/components/archived-section";
 
-type UserRole = "tom_sally" | "geoff_nikki";
+type Year = 2020 | 2021 | 2022 | 2023 | 2024 | 2025;
 
 export default function DashboardPage() {
-  const [currentRole, setCurrentRole] = useState<UserRole>("tom_sally");
+  const [currentYear, setCurrentYear] = useState<Year>(2025);
   const [activeSection, setActiveSection] = useState("main");
 
-  const isFullAccess = currentRole === "tom_sally";
+  const isFullAccess = true;
 
   const renderContent = () => {
     switch (activeSection) {
@@ -70,8 +70,8 @@ export default function DashboardPage() {
   return (
     <div className="bg-background flex min-h-screen flex-col">
       <DashboardHeader
-        currentRole={currentRole}
-        onRoleChange={setCurrentRole}
+        currentYear={currentYear}
+        onYearChange={setCurrentYear}
       />
       <div className="border-border border-b px-6 py-4">
         <ProjectSummary />
