@@ -1826,6 +1826,13 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      get_stove_years: {
+        Args: never
+        Returns: {
+          newest_year: number
+          oldest_year: number
+        }[]
+      }
       gettransactionid: { Args: never; Returns: unknown }
       longtransactionsenabled: { Args: never; Returns: boolean }
       populate_geometry_columns:

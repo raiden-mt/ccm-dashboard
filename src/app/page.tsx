@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { DashboardHeader } from "~/components/header";
 import { DashboardSidebar } from "~/components/sidebar";
 import { ProjectSummary } from "~/components/project-summary";
 import { DashboardOverview } from "~/components/overview";
@@ -66,7 +65,6 @@ export default function DashboardPage() {
 
   return (
     <div className="bg-background flex min-h-screen flex-col">
-      <DashboardHeader />
       <div className="border-border border-b px-6 py-4">
         <ProjectSummary />
       </div>

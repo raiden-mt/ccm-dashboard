@@ -5,6 +5,7 @@ import { AlertCircle } from "lucide-react";
 
 export async function DashboardHeader() {
   const result = await getYears();
+  console.log(result.error ? result.message : "No error");
 
   return (
     <header className="border-border bg-primary border-b">
@@ -42,12 +43,16 @@ async function getYears(): Promise<
 
   const { data, error } = await supabase
     .from("householders")
-    .select("stove_build_date")
-    .order("stove_build_date", { ascending: true })
-    .limit(1);
+    .select("stove_build_date");
+  // .order("stove_build_date", { ascending: true })
+  // .limit(1);
+
+  console.log(data);
 
   if (error || !data || data.length === 0) {
-    return { error: true, message: "Failed to get years" };
+    console.log(error ? error.message : "No error");
+    console.log(data ? data.length : "No data");
+    return { error: true, message: "Failed to get years from supabase" };
   }
 
   const oldestYear = data[0]?.stove_build_date
@@ -55,7 +60,7 @@ async function getYears(): Promise<
     : undefined;
 
   if (!oldestYear) {
-    return { error: true, message: "Failed to get years" };
+    return { error: true, message: "No valid years found" };
   }
 
   return {
