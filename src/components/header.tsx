@@ -8,6 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { ChevronDown, User } from "lucide-react";
+import Image from "next/image";
 
 type UserRole = "tom_sally" | "geoff_nikki";
 
@@ -26,9 +27,7 @@ export function DashboardHeader({ currentRole, onRoleChange }: HeaderProps) {
     <header className="border-border bg-primary border-b">
       <div className="flex items-center justify-between px-6 py-4">
         <div className="flex items-center gap-4">
-          <div className="bg-ripple-green flex h-10 w-10 items-center justify-center rounded-lg">
-            <span className="text-lg font-bold text-white">CCM</span>
-          </div>
+          <Image src="/logo.png" alt="CCM Logo" width={40} height={40} />
           <div>
             <h1 className="text-primary-foreground text-xl font-semibold">
               Changu Changu Moto

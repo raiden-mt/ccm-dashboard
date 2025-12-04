@@ -6,6 +6,9 @@ import { Geist } from "next/font/google";
 export const metadata: Metadata = {
   title: "CCM Database Dashboard",
   description: "Changu Changu Moto - Reporting System",
+  icons: {
+    icon: "/logo.png",
+  },
 };
 
 const geist = Geist({
