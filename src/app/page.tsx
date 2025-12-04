@@ -1,37 +1,89 @@
-import Link from "next/link";
+"use client";
 
-export default function HomePage() {
+import { useState } from "react";
+import { DashboardHeader } from "~/components/header";
+import { DashboardSidebar } from "~/components/sidebar";
+import { ProjectSummary } from "~/components/project-summary";
+import { DashboardOverview } from "~/components/overview";
+import { DataExtraction } from "~/components/data-extraction";
+import { AutomatedChecks } from "~/components/automated-checks";
+import { StovesPerVPA } from "~/components/stoves-per-vpa";
+import { StaffTraining } from "~/components/staff-training";
+import { InspectionsSection } from "~/components/inspections-section";
+import { SurveysSection } from "~/components/surveys-section";
+import { HouseholdsSection } from "~/components/households-section";
+import { LocalAuthorities } from "~/components/local-authorities";
+import { CVPerformance } from "~/components/cv-performance";
+import { CoordinatorReports } from "~/components/coordinator-reports";
+import { NotActiveSection } from "~/components/not-active-section";
+import { ArchivedSection } from "~/components/archived-section";
+
+type UserRole = "tom_sally" | "geoff_nikki";
+
+export default function DashboardPage() {
+  const [currentRole, setCurrentRole] = useState<UserRole>("tom_sally");
+  const [activeSection, setActiveSection] = useState("main");
+
+  const isFullAccess = currentRole === "tom_sally";
+
+  const renderContent = () => {
+    switch (activeSection) {
+      case "main":
+        return <DashboardOverview isExecutive={!isFullAccess} />;
+      case "households":
+        return <HouseholdsSection />;
+      case "data-extraction":
+        return isFullAccess ? (
+          <DataExtraction />
+        ) : (
+          <DashboardOverview isExecutive={true} />
+        );
+      case "automated-checks":
+        return <AutomatedChecks />;
+      case "stoves-per-vpa":
+        return <StovesPerVPA />;
+      case "staff":
+        return <StaffTraining />;
+      case "inspections":
+        return <InspectionsSection />;
+      case "usage-surveys":
+        return <SurveysSection type="usage" />;
+      case "kpt-surveys":
+        return <SurveysSection type="kpt" />;
+      case "sdg-surveys":
+        return <SurveysSection type="sdg" />;
+      case "local-authorities":
+        return <LocalAuthorities />;
+      case "cv-performance":
+        return <CVPerformance />;
+      case "coordinator-reports":
+        return <CoordinatorReports />;
+      case "not-active":
+        return <NotActiveSection />;
+      case "archived":
+        return <ArchivedSection />;
+      default:
+        return <DashboardOverview isExecutive={!isFullAccess} />;
+    }
+  };
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
-      <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
-        <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
-          Create <span className="text-[hsl(280,100%,70%)]">T3</span> App
-        </h1>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
-          <Link
-            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-            href="https://create.t3.gg/en/usage/first-steps"
-            target="_blank"
-          >
-            <h3 className="text-2xl font-bold">First Steps →</h3>
-            <div className="text-lg">
-              Just the basics - Everything you need to know to set up your
-              database and authentication.
-            </div>
-          </Link>
-          <Link
-            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-            href="https://create.t3.gg/en/introduction"
-            target="_blank"
-          >
-            <h3 className="text-2xl font-bold">Documentation →</h3>
-            <div className="text-lg">
-              Learn more about Create T3 App, the libraries it uses, and how to
-              deploy it.
-            </div>
-          </Link>
-        </div>
+    <div className="bg-background flex min-h-screen flex-col">
+      <DashboardHeader
+        currentRole={currentRole}
+        onRoleChange={setCurrentRole}
+      />
+      <div className="border-border border-b px-6 py-4">
+        <ProjectSummary />
       </div>
-    </main>
+      <div className="flex flex-1">
+        <DashboardSidebar
+          activeSection={activeSection}
+          onSectionChange={setActiveSection}
+          isFullAccess={isFullAccess}
+        />
+        <main className="flex-1 overflow-auto p-6">{renderContent()}</main>
+      </div>
+    </div>
   );
 }
