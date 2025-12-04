@@ -1,4 +1,5 @@
 import { createServerClient } from "@supabase/ssr";
+import { type Database } from "./database";
 import { cookies } from "next/headers";
 import { env } from "~/env";
 
@@ -27,6 +28,20 @@ export async function createClient() {
             // This can be ignored if you have middleware refreshing
             // user sessions.
           }
+        },
+      },
+    },
+  );
+}
+
+export function createAdminClient() {
+  return createServerClient<Database>(
+    env.NEXT_PUBLIC_SUPABASE_URL,
+    env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    {
+      cookies: {
+        getAll() {
+          return [];
         },
       },
     },
