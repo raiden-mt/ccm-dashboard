@@ -1,6 +1,12 @@
 "use client";
 
 import { Card, CardContent } from "~/components/ui/card";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "~/components/ui/accordion";
 import { dashboardStats } from "~/lib/mock-data";
 import {
   Flame,
@@ -94,32 +100,40 @@ export function ProjectSummary() {
 
   return (
     <Card className="bg-card-cream border-0 shadow-sm">
-      <CardContent className="p-4">
-        <h3 className="text-foreground mb-4 text-lg font-semibold">
-          CCM Project Summary
-        </h3>
-        <div className="grid grid-cols-3 gap-3 md:grid-cols-5 lg:grid-cols-9">
-          {summaryItems.map((item) => (
-            <div
-              key={item.label}
-              className={`flex flex-col items-center rounded-lg p-3 text-center ${item.bgColor}`}
-            >
-              <item.icon className={`mb-1 h-5 w-5 ${item.color}`} />
-              <span className="text-foreground text-lg font-bold">
-                {item.value}
-              </span>
-              {item.percent && (
-                <span className="text-muted-foreground text-xs font-medium">
-                  {item.percent}
-                </span>
-              )}
-              <span className="text-muted-foreground mt-1 text-xs leading-tight">
-                {item.label}
-              </span>
-            </div>
-          ))}
-        </div>
-      </CardContent>
+      <Accordion type="single" collapsible className="w-full">
+        <AccordionItem value="project-summary">
+          <AccordionTrigger className="px-4 py-4">
+            <h3 className="text-foreground text-lg font-semibold">
+              CCM Project Summary
+            </h3>
+          </AccordionTrigger>
+          <AccordionContent>
+            <CardContent className="p-4 pt-0">
+              <div className="grid grid-cols-2 gap-3 md:grid-cols-5 lg:grid-cols-9">
+                {summaryItems.map((item) => (
+                  <div
+                    key={item.label}
+                    className={`flex flex-col items-center rounded-lg p-3 text-center ${item.bgColor}`}
+                  >
+                    <item.icon className={`mb-1 h-5 w-5 ${item.color}`} />
+                    <span className="text-foreground text-lg font-bold">
+                      {item.value}
+                    </span>
+                    {item.percent && (
+                      <span className="text-muted-foreground text-xs font-medium">
+                        {item.percent}
+                      </span>
+                    )}
+                    <span className="text-muted-foreground mt-1 text-xs leading-tight">
+                      {item.label}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
     </Card>
   );
 }
