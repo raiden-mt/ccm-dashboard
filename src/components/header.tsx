@@ -1,27 +1,11 @@
-"use client";
-
-import { Button } from "~/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "~/components/ui/dropdown-menu";
-import { ChevronDown, User } from "lucide-react";
 import Image from "next/image";
+import YearSelector from "./year-selector";
+import { createAdminClient } from "~/lib/services/supabase/server";
+import { AlertCircle } from "lucide-react";
+import { getCurrentUser } from "~/lib/services/supabase/lib/getCurrentUser";
 
-type UserRole = "tom_sally" | "geoff_nikki";
-
-interface HeaderProps {
-  currentRole: UserRole;
-  onRoleChange: (role: UserRole) => void;
-}
-
-export function DashboardHeader({ currentRole, onRoleChange }: HeaderProps) {
-  const roleLabels: Record<UserRole, string> = {
-    tom_sally: "Tom / Sally (Full Access)",
-    geoff_nikki: "Geoff / Nikki (Executive Dashboard)",
-  };
+export async function DashboardHeader() {
+  const [result, user] = await Promise.all([getYears(), getCurrentUser()]);
 
   return (
     <header className="border-border bg-primary border-b">
@@ -37,30 +21,54 @@ export function DashboardHeader({ currentRole, onRoleChange }: HeaderProps) {
             </p>
           </div>
         </div>
-
-        <div className="flex items-center gap-4">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                className="border-primary-foreground/30 bg-primary-foreground/10 text-primary-foreground hover:bg-primary-foreground/20 hover:text-primary-foreground gap-2"
-              >
-                <User className="h-4 w-4" />
-                {roleLabels[currentRole]}
-                <ChevronDown className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => onRoleChange("tom_sally")}>
-                Tom / Sally (Full Access)
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => onRoleChange("geoff_nikki")}>
-                Geoff / Nikki (Executive Dashboard)
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
+        {user && (
+          <div className="flex items-center gap-4">
+            {result.error ? (
+              <p className="text-red-500">
+                <AlertCircle />
+              </p>
+            ) : (
+              <YearSelector years={result.years} />
+            )}
+          </div>
+        )}
       </div>
     </header>
+  );
+}
+
+async function getYears(): Promise<
+  { error: true; message: string } | { error: false; years: number[] }
+> {
+  const supabase = createAdminClient();
+
+  const { data, error } = await supabase
+    .from("householders")
+    .select("stove_build_date")
+    .order("stove_build_date", { ascending: true })
+    .limit(1);
+
+  if (error || !data || data.length === 0) {
+    return { error: true, message: "Failed to get years from supabase" };
+  }
+
+  const oldestYear = data[0]?.stove_build_date
+    ? new Date(data[0].stove_build_date).getFullYear()
+    : undefined;
+
+  if (!oldestYear) {
+    return { error: true, message: "No valid years found" };
+  }
+
+  return {
+    error: false,
+    years: createYearArray(oldestYear, new Date().getFullYear()),
+  };
+}
+
+function createYearArray(oldestYear: number, currentYear: number) {
+  return Array.from(
+    { length: currentYear - oldestYear + 1 },
+    (_, index) => oldestYear + index,
   );
 }
