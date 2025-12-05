@@ -1,6 +1,6 @@
 import Image from "next/image";
 import YearSelector from "./year-selector";
-import { createClient } from "~/lib/services/supabase/server";
+import { createAdminClient } from "~/lib/services/supabase/server";
 import { AlertCircle } from "lucide-react";
 import { getCurrentUser } from "~/lib/services/supabase/lib/getCurrentUser";
 
@@ -40,7 +40,7 @@ export async function DashboardHeader() {
 async function getYears(): Promise<
   { error: true; message: string } | { error: false; years: number[] }
 > {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
 
   const { data, error } = await supabase
     .from("householders")
@@ -53,7 +53,7 @@ async function getYears(): Promise<
   }
 
   const oldestYear = data[0]?.stove_build_date
-    ? new Date(data[0].stove_build_date as Date).getFullYear()
+    ? new Date(data[0].stove_build_date).getFullYear()
     : undefined;
 
   if (!oldestYear) {
