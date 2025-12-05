@@ -99,7 +99,7 @@ export function ProjectSummary() {
   ];
 
   return (
-    <Card className="bg-card-cream border-0 shadow-sm">
+    <Card className="bg-card-cream border-0 p-0 shadow-sm">
       <Accordion type="single" collapsible className="w-full">
         <AccordionItem value="project-summary">
           <AccordionTrigger className="px-4 py-4">
