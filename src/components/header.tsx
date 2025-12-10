@@ -3,6 +3,7 @@ import YearSelector from "./year-selector";
 import { createAdminClient } from "~/lib/services/supabase/server";
 import { AlertCircle } from "lucide-react";
 import { getCurrentUser } from "~/lib/services/supabase/lib/getCurrentUser";
+import { LogoutButton } from "~/lib/services/supabase/components/logout-button";
 
 export async function DashboardHeader() {
   const [result, user] = await Promise.all([getYears(), getCurrentUser()]);
@@ -17,7 +18,7 @@ export async function DashboardHeader() {
               Changu Changu Moto
             </h1>
             <p className="text-primary-foreground/80 text-sm">
-              Community Conservation Malawi
+              Providing a handup not a handout
             </p>
           </div>
         </div>
@@ -30,6 +31,7 @@ export async function DashboardHeader() {
             ) : (
               <YearSelector years={result.years} />
             )}
+            <LogoutButton />
           </div>
         )}
       </div>
