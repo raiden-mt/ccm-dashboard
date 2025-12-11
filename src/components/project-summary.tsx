@@ -27,12 +27,14 @@ export async function ProjectSummary({ year }: { year: number }) {
     conditionGoodResult,
     kitchensResult,
     wellVentilatedResult,
+    rainProtectedResult,
   ] = await Promise.all([
     getTotalCCMsBuilt({ year }),
     getTotalCCMsInUse({ year }),
     getConditionGoodCCMs({ year }),
     getTotalKitchens({ year }),
     getWellVentilated({ year }),
+    getRainProtected({ year }),
   ]);
 
   const summaryItems = [
@@ -100,8 +102,13 @@ export async function ProjectSummary({ year }: { year: number }) {
     },
     {
       label: "Protected from Rain",
-      value: stats.rainProtected.toLocaleString(),
-      percent: `${((stats.rainProtected / stats.totalKitchens) * 100).toFixed(0)}%`,
+      value: rainProtectedResult.error
+        ? "N/A"
+        : rainProtectedResult.total.toLocaleString(),
+      percent:
+        rainProtectedResult.error || kitchensResult.error
+          ? null
+          : `${((rainProtectedResult.total / kitchensResult.total) * 100).toFixed(0)}%`,
       icon: CloudRain,
       color: "text-[#4A90A4]",
       bgColor: "bg-status-blue",
@@ -266,6 +273,25 @@ async function getWellVentilated({
 
   if (error || data == null || typeof data !== "number") {
     return { error: true, message: "Failed to get well ventilated count" };
+  }
+
+  return { error: false, total: data };
+}
+
+async function getRainProtected({
+  year,
+}: {
+  year: number;
+}): Promise<
+  { error: true; message: string } | { error: false; total: number }
+> {
+  const supabase = createAdminClient();
+  const { data, error } = await supabase.rpc("get_rain_protected_count", {
+    year_param: year,
+  });
+
+  if (error || data == null || typeof data !== "number") {
+    return { error: true, message: "Failed to get rain protected count" };
   }
 
   return { error: false, total: data };
