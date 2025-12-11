@@ -1,5 +1,3 @@
-"use client";
-
 import { Card, CardContent } from "~/components/ui/card";
 import {
   Accordion,
@@ -19,14 +17,20 @@ import {
   AlertCircle,
   XCircle,
 } from "lucide-react";
+import { createAdminClient } from "~/lib/services/supabase/server";
 
-export function ProjectSummary() {
+export async function ProjectSummary({ year }: { year: number }) {
   const stats = dashboardStats;
+  const ccmsBuiltResult = await getTotalCCMsBuilt({
+    year,
+  });
 
   const summaryItems = [
     {
       label: "Total CCMs Built",
-      value: stats.totalStoves.toLocaleString(),
+      value: ccmsBuiltResult.error
+        ? "N/A"
+        : ccmsBuiltResult.total.toLocaleString(),
       percent: null,
       icon: Flame,
       color: "text-primary",
@@ -136,4 +140,24 @@ export function ProjectSummary() {
       </Accordion>
     </Card>
   );
+}
+
+export async function getTotalCCMsBuilt({
+  year,
+}: {
+  year: number;
+}): Promise<
+  { error: true; message: string } | { error: false; total: number }
+> {
+  const supabase = createAdminClient();
+  const { count, error } = await supabase
+    .from("householders")
+    .select("*", { count: "exact", head: true })
+    .gte("stove_build_date", `${year}-01-01`)
+    .lte("stove_build_date", `${year}-12-31`);
+
+  if (error || count == null)
+    return { error: true, message: "Failed to get total CCMs built" };
+
+  return { error: false, total: count };
 }
