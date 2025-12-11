@@ -26,11 +26,13 @@ export async function ProjectSummary({ year }: { year: number }) {
     ccmsInUseResult,
     conditionGoodResult,
     kitchensResult,
+    wellVentilatedResult,
   ] = await Promise.all([
     getTotalCCMsBuilt({ year }),
     getTotalCCMsInUse({ year }),
     getConditionGoodCCMs({ year }),
     getTotalKitchens({ year }),
+    getWellVentilated({ year }),
   ]);
 
   const summaryItems = [
@@ -85,8 +87,13 @@ export async function ProjectSummary({ year }: { year: number }) {
     },
     {
       label: "Well Ventilated",
-      value: stats.wellVentilated.toLocaleString(),
-      percent: `${((stats.wellVentilated / stats.totalKitchens) * 100).toFixed(0)}%`,
+      value: wellVentilatedResult.error
+        ? "N/A"
+        : wellVentilatedResult.total.toLocaleString(),
+      percent:
+        wellVentilatedResult.error || kitchensResult.error
+          ? null
+          : `${((wellVentilatedResult.total / kitchensResult.total) * 100).toFixed(0)}%`,
       icon: Wind,
       color: "text-ripple-green",
       bgColor: "bg-action-mint/50",
@@ -240,6 +247,25 @@ async function getTotalKitchens({
 
   if (error || data == null || typeof data !== "number") {
     return { error: true, message: "Failed to get total kitchens" };
+  }
+
+  return { error: false, total: data };
+}
+
+async function getWellVentilated({
+  year,
+}: {
+  year: number;
+}): Promise<
+  { error: true; message: string } | { error: false; total: number }
+> {
+  const supabase = createAdminClient();
+  const { data, error } = await supabase.rpc("get_well_ventilated_count", {
+    year_param: year,
+  });
+
+  if (error || data == null || typeof data !== "number") {
+    return { error: true, message: "Failed to get well ventilated count" };
   }
 
   return { error: false, total: data };
