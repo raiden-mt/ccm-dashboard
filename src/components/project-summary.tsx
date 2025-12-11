@@ -24,6 +24,9 @@ export async function ProjectSummary({ year }: { year: number }) {
   const ccmsBuiltResult = await getTotalCCMsBuilt({
     year,
   });
+  const ccmsInUseResult = await getTotalCCMsInUse({
+    year,
+  });
 
   const summaryItems = [
     {
@@ -38,8 +41,13 @@ export async function ProjectSummary({ year }: { year: number }) {
     },
     {
       label: "Total CCMs In Use",
-      value: stats.activeStoves.toLocaleString(),
-      percent: `${((stats.activeStoves / stats.totalStoves) * 100).toFixed(0)}%`,
+      value: ccmsInUseResult.error
+        ? "N/A"
+        : ccmsInUseResult.total.toLocaleString(),
+      percent:
+        ccmsBuiltResult.error || ccmsInUseResult.error
+          ? null
+          : `${((ccmsInUseResult.total / ccmsBuiltResult.total) * 100).toFixed(0)}%`,
       icon: Activity,
       color: "text-ripple-green",
       bgColor: "bg-ripple-green/10",
@@ -160,4 +168,23 @@ export async function getTotalCCMsBuilt({
     return { error: true, message: "Failed to get total CCMs built" };
 
   return { error: false, total: count };
+}
+
+export async function getTotalCCMsInUse({
+  year,
+}: {
+  year: number;
+}): Promise<
+  { error: true; message: string } | { error: false; total: number }
+> {
+  const supabase = createAdminClient();
+  const { data, error } = await supabase.rpc("get_ccms_in_use_count", {
+    year_param: year,
+  });
+
+  if (error || data == null || typeof data !== "number") {
+    return { error: true, message: "Failed to get total CCMs in use" };
+  }
+
+  return { error: false, total: data };
 }

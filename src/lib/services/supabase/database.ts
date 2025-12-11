@@ -1845,6 +1845,10 @@ export type Database = {
           oldest_year: number;
         }[];
       };
+      get_ccms_in_use_count: {
+        Args: { year_param: number };
+        Returns: number;
+      };
       gettransactionid: { Args: never; Returns: unknown };
       longtransactionsenabled: { Args: never; Returns: boolean };
       populate_geometry_columns:
