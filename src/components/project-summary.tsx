@@ -148,7 +148,7 @@ export async function ProjectSummary({ year }: { year: number }) {
   );
 }
 
-export async function getTotalCCMsBuilt({
+async function getTotalCCMsBuilt({
   year,
 }: {
   year: number;
@@ -168,7 +168,7 @@ export async function getTotalCCMsBuilt({
   return { error: false, total: count };
 }
 
-export async function getTotalCCMsInUse({
+async function getTotalCCMsInUse({
   year,
 }: {
   year: number;
