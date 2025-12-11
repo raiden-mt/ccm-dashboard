@@ -21,12 +21,17 @@ import { createAdminClient } from "~/lib/services/supabase/server";
 
 export async function ProjectSummary({ year }: { year: number }) {
   const stats = dashboardStats;
-  const [ccmsBuiltResult, ccmsInUseResult, conditionGoodResult] =
-    await Promise.all([
-      getTotalCCMsBuilt({ year }),
-      getTotalCCMsInUse({ year }),
-      getConditionGoodCCMs({ year }),
-    ]);
+  const [
+    ccmsBuiltResult,
+    ccmsInUseResult,
+    conditionGoodResult,
+    kitchensResult,
+  ] = await Promise.all([
+    getTotalCCMsBuilt({ year }),
+    getTotalCCMsInUse({ year }),
+    getConditionGoodCCMs({ year }),
+    getTotalKitchens({ year }),
+  ]);
 
   const summaryItems = [
     {
@@ -67,8 +72,13 @@ export async function ProjectSummary({ year }: { year: number }) {
     },
     {
       label: "Total Kitchens",
-      value: stats.totalKitchens.toLocaleString(),
-      percent: `${((stats.totalKitchens / stats.totalHouseholders) * 100).toFixed(0)}%`,
+      value: kitchensResult.error
+        ? "N/A"
+        : kitchensResult.total.toLocaleString(),
+      percent:
+        kitchensResult.error || ccmsBuiltResult.error
+          ? null
+          : `${((kitchensResult.total / ccmsBuiltResult.total) * 100).toFixed(0)}%`,
       icon: Home,
       color: "text-[#4A90A4]",
       bgColor: "bg-status-blue",
@@ -214,4 +224,23 @@ async function getConditionGoodCCMs({
   }
 
   return { error: false, count: data };
+}
+
+async function getTotalKitchens({
+  year,
+}: {
+  year: number;
+}): Promise<
+  { error: true; message: string } | { error: false; total: number }
+> {
+  const supabase = createAdminClient();
+  const { data, error } = await supabase.rpc("get_total_kitchens", {
+    year_param: year,
+  });
+
+  if (error || data == null || typeof data !== "number") {
+    return { error: true, message: "Failed to get total kitchens" };
+  }
+
+  return { error: false, total: data };
 }

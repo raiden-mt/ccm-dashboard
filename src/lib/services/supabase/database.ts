@@ -1853,6 +1853,10 @@ export type Database = {
         Args: { year_param: number };
         Returns: number;
       };
+      get_total_kitchens: {
+        Args: { year_param: number };
+        Returns: number;
+      };
       gettransactionid: { Args: never; Returns: unknown };
       longtransactionsenabled: { Args: never; Returns: boolean };
       populate_geometry_columns:
