@@ -21,10 +21,12 @@ import { createAdminClient } from "~/lib/services/supabase/server";
 
 export async function ProjectSummary({ year }: { year: number }) {
   const stats = dashboardStats;
-  const [ccmsBuiltResult, ccmsInUseResult] = await Promise.all([
-    getTotalCCMsBuilt({ year }),
-    getTotalCCMsInUse({ year }),
-  ]);
+  const [ccmsBuiltResult, ccmsInUseResult, conditionGoodResult] =
+    await Promise.all([
+      getTotalCCMsBuilt({ year }),
+      getTotalCCMsInUse({ year }),
+      getConditionGoodCCMs({ year }),
+    ]);
 
   const summaryItems = [
     {
@@ -52,8 +54,13 @@ export async function ProjectSummary({ year }: { year: number }) {
     },
     {
       label: "Condition Good/Average",
-      value: stats.conditionGood.toLocaleString(),
-      percent: `${((stats.conditionGood / stats.totalStoves) * 100).toFixed(0)}%`,
+      value: conditionGoodResult.error
+        ? "N/A"
+        : conditionGoodResult.count.toLocaleString(),
+      percent:
+        conditionGoodResult.error || ccmsBuiltResult.error
+          ? null
+          : `${((conditionGoodResult.count / ccmsBuiltResult.total) * 100).toFixed(0)}%`,
       icon: ThumbsUp,
       color: "text-ripple-green",
       bgColor: "bg-status-green",
@@ -185,4 +192,26 @@ async function getTotalCCMsInUse({
   }
 
   return { error: false, total: data };
+}
+
+async function getConditionGoodCCMs({
+  year,
+}: {
+  year: number;
+}): Promise<
+  { error: true; message: string } | { error: false; count: number }
+> {
+  const supabase = createAdminClient();
+  const { data, error } = await supabase.rpc("get_condition_good_count", {
+    year_param: year,
+  });
+
+  if (error || data == null || typeof data !== "number") {
+    return {
+      error: true,
+      message: "Failed to get condition good count",
+    };
+  }
+
+  return { error: false, count: data };
 }
