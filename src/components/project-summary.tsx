@@ -21,12 +21,10 @@ import { createAdminClient } from "~/lib/services/supabase/server";
 
 export async function ProjectSummary({ year }: { year: number }) {
   const stats = dashboardStats;
-  const ccmsBuiltResult = await getTotalCCMsBuilt({
-    year,
-  });
-  const ccmsInUseResult = await getTotalCCMsInUse({
-    year,
-  });
+  const [ccmsBuiltResult, ccmsInUseResult] = await Promise.all([
+    getTotalCCMsBuilt({ year }),
+    getTotalCCMsInUse({ year }),
+  ]);
 
   const summaryItems = [
     {
