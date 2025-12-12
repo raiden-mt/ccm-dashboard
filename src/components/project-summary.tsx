@@ -5,7 +5,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "~/components/ui/accordion";
-import { dashboardStats } from "~/lib/mock-data";
 import {
   Flame,
   Activity,
@@ -20,7 +19,6 @@ import {
 import { createAdminClient } from "~/lib/services/supabase/server";
 
 export async function ProjectSummary({ year }: { year: number }) {
-  const stats = dashboardStats;
   const [
     ccmsBuiltResult,
     ccmsInUseResult,
@@ -28,6 +26,9 @@ export async function ProjectSummary({ year }: { year: number }) {
     kitchensResult,
     wellVentilatedResult,
     rainProtectedResult,
+    inspected0to3MonthsResult,
+    inspected3to6MonthsResult,
+    inspectedOver6MonthsResult,
   ] = await Promise.all([
     getTotalCCMsBuilt({ year }),
     getTotalCCMsInUse({ year }),
@@ -35,6 +36,9 @@ export async function ProjectSummary({ year }: { year: number }) {
     getTotalKitchens({ year }),
     getWellVentilated({ year }),
     getRainProtected({ year }),
+    getInspected0To3Months({ year }),
+    getInspected3To6Months({ year }),
+    getInspectedOver6Months({ year }),
   ]);
 
   const summaryItems = [
@@ -115,24 +119,39 @@ export async function ProjectSummary({ year }: { year: number }) {
     },
     {
       label: "Inspected 0-3 months",
-      value: stats.inspected0to3Months.toLocaleString(),
-      percent: `${stats.greenStatusPercent}%`,
+      value: inspected0to3MonthsResult.error
+        ? "N/A"
+        : inspected0to3MonthsResult.count.toLocaleString(),
+      percent:
+        inspected0to3MonthsResult.error || ccmsBuiltResult.error
+          ? null
+          : `${((inspected0to3MonthsResult.count / ccmsBuiltResult.total) * 100).toFixed(0)}%`,
       icon: CheckCircle2,
       color: "text-ripple-green",
       bgColor: "bg-status-green",
     },
     {
       label: "Inspected 3-6 months",
-      value: stats.inspected3to6Months.toLocaleString(),
-      percent: `${stats.yellowStatusPercent}%`,
+      value: inspected3to6MonthsResult.error
+        ? "N/A"
+        : inspected3to6MonthsResult.count.toLocaleString(),
+      percent:
+        inspected3to6MonthsResult.error || ccmsBuiltResult.error
+          ? null
+          : `${((inspected3to6MonthsResult.count / ccmsBuiltResult.total) * 100).toFixed(0)}%`,
       icon: AlertCircle,
       color: "text-[#B8860B]",
       bgColor: "bg-status-tan",
     },
     {
       label: "Inspected > 6 months",
-      value: stats.inspected6PlusMonths.toLocaleString(),
-      percent: `${stats.redStatusPercent}%`,
+      value: inspectedOver6MonthsResult.error
+        ? "N/A"
+        : inspectedOver6MonthsResult.count.toLocaleString(),
+      percent:
+        inspectedOver6MonthsResult.error || ccmsBuiltResult.error
+          ? null
+          : `${((inspectedOver6MonthsResult.count / ccmsBuiltResult.total) * 100).toFixed(0)}%`,
       icon: XCircle,
       color: "text-[#C75050]",
       bgColor: "bg-status-salmon",
@@ -295,4 +314,79 @@ async function getRainProtected({
   }
 
   return { error: false, total: data };
+}
+
+async function getInspected0To3Months({
+  year,
+}: {
+  year: number;
+}): Promise<
+  { error: true; message: string } | { error: false; count: number }
+> {
+  const supabase = createAdminClient();
+  const { data, error } = await supabase.rpc(
+    "get_inspected_0_to_3_months_count",
+    {
+      year_param: year,
+    },
+  );
+
+  if (error || data == null || typeof data !== "number") {
+    return {
+      error: true,
+      message: "Failed to get inspected 0-3 months count",
+    };
+  }
+
+  return { error: false, count: data };
+}
+
+async function getInspected3To6Months({
+  year,
+}: {
+  year: number;
+}): Promise<
+  { error: true; message: string } | { error: false; count: number }
+> {
+  const supabase = createAdminClient();
+  const { data, error } = await supabase.rpc(
+    "get_inspected_3_to_6_months_count",
+    {
+      year_param: year,
+    },
+  );
+
+  if (error || data == null || typeof data !== "number") {
+    return {
+      error: true,
+      message: "Failed to get inspected 3-6 months count",
+    };
+  }
+
+  return { error: false, count: data };
+}
+
+async function getInspectedOver6Months({
+  year,
+}: {
+  year: number;
+}): Promise<
+  { error: true; message: string } | { error: false; count: number }
+> {
+  const supabase = createAdminClient();
+  const { data, error } = await supabase.rpc(
+    "get_inspected_over_6_months_count",
+    {
+      year_param: year,
+    },
+  );
+
+  if (error || data == null || typeof data !== "number") {
+    return {
+      error: true,
+      message: "Failed to get inspected over 6 months count",
+    };
+  }
+
+  return { error: false, count: data };
 }

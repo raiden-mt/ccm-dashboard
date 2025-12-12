@@ -1865,6 +1865,18 @@ export type Database = {
         Args: { year_param: number };
         Returns: number;
       };
+      get_inspected_0_to_3_months_count: {
+        Args: { year_param: number };
+        Returns: number;
+      };
+      get_inspected_3_to_6_months_count: {
+        Args: { year_param: number };
+        Returns: number;
+      };
+      get_inspected_over_6_months_count: {
+        Args: { year_param: number };
+        Returns: number;
+      };
       gettransactionid: { Args: never; Returns: unknown };
       longtransactionsenabled: { Args: never; Returns: boolean };
       populate_geometry_columns:
