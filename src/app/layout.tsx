@@ -25,8 +25,10 @@ export default function RootLayout({
     <html lang="en" className={`${geist.variable}`}>
       <body>
         <NuqsAdapter>
-          <DashboardHeader />
-          {children}
+          <div className="flex max-h-dvh flex-col">
+            <DashboardHeader />
+            <main className="flex-1 overflow-y-auto">{children}</main>
+          </div>
         </NuqsAdapter>
       </body>
     </html>

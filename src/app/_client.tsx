@@ -65,9 +65,6 @@ export default function DashboardPageClient() {
 
   return (
     <div className="bg-background flex min-h-screen flex-col">
-      <div className="border-border border-b px-6 py-4">
-        <ProjectSummary />
-      </div>
       <div className="flex flex-1">
         <DashboardSidebar
           activeSection={activeSection}

@@ -1845,6 +1845,38 @@ export type Database = {
           oldest_year: number;
         }[];
       };
+      get_ccms_in_use_count: {
+        Args: { year_param: number };
+        Returns: number;
+      };
+      get_condition_good_count: {
+        Args: { year_param: number };
+        Returns: number;
+      };
+      get_total_kitchens: {
+        Args: { year_param: number };
+        Returns: number;
+      };
+      get_well_ventilated_count: {
+        Args: { year_param: number };
+        Returns: number;
+      };
+      get_rain_protected_count: {
+        Args: { year_param: number };
+        Returns: number;
+      };
+      get_inspected_0_to_3_months_count: {
+        Args: { year_param: number };
+        Returns: number;
+      };
+      get_inspected_3_to_6_months_count: {
+        Args: { year_param: number };
+        Returns: number;
+      };
+      get_inspected_over_6_months_count: {
+        Args: { year_param: number };
+        Returns: number;
+      };
       gettransactionid: { Args: never; Returns: unknown };
       longtransactionsenabled: { Args: never; Returns: boolean };
       populate_geometry_columns:
