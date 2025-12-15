@@ -20,46 +20,22 @@ import {
 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { loadSearchParams } from "~/lib/search-params";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createClient } from "~/lib/services/supabase/client";
+import type { RealtimeChannel } from "@supabase/supabase-js";
 
 export function ProjectSummaryRealtime() {
-  const searchParams = useSearchParams();
-  const year = loadSearchParams(searchParams).year;
-
-  const [ccmsBuiltResult, setCCMsBuiltResult] = useState<number>(0);
-  const [ccmsInUseResult, setCCMsInUseResult] = useState<number>(0);
-  const [conditionGoodResult, setConditionGoodResult] = useState<number>(0);
-  const [kitchensResult, setKitchensResult] = useState<number>(0);
-  const [wellVentilatedResult, setWellVentilatedResult] = useState<number>(0);
-  const [rainProtectedResult, setRainProtectedResult] = useState<number>(0);
-  const [inspected0to3MonthsResult, setInspected0to3MonthsResult] =
-    useState<number>(0);
-  const [inspected3to6MonthsResult, setInspected3to6MonthsResult] =
-    useState<number>(0);
-  const [inspectedOver6MonthsResult, setInspectedOver6MonthsResult] =
-    useState<number>(0);
-  //   const [
-  //     ccmsBuiltResult,
-  //     ccmsInUseResult,
-  //     conditionGoodResult,
-  //     kitchensResult,
-  //     wellVentilatedResult,
-  //     rainProtectedResult,
-  //     inspected0to3MonthsResult,
-  //     inspected3to6MonthsResult,
-  //     inspectedOver6MonthsResult,
-  //   ] = await Promise.all([
-  //     getTotalCCMsBuilt({ year }),
-  //     getTotalCCMsInUse({ year }),
-  //     getConditionGoodCCMs({ year }),
-  //     getTotalKitchens({ year }),
-  //     getWellVentilated({ year }),
-  //     getRainProtected({ year }),
-  //     getInspected0To3Months({ year }),
-  //     getInspected3To6Months({ year }),
-  //     getInspectedOver6Months({ year }),
-  //   ]);
+  const {
+    ccmsBuiltResult,
+    ccmsInUseResult,
+    conditionGoodResult,
+    kitchensResult,
+    wellVentilatedResult,
+    rainProtectedResult,
+    inspected0to3MonthsResult,
+    inspected3to6MonthsResult,
+    inspectedOver6MonthsResult,
+  } = useRealtimeProjectSummary();
 
   const summaryItems = [
     {
@@ -198,6 +174,161 @@ export function ProjectSummaryRealtime() {
       </Accordion>
     </Card>
   );
+}
+
+function useRealtimeProjectSummary() {
+  const searchParams = useSearchParams();
+  const year = loadSearchParams(searchParams).year;
+
+  const [ccmsBuiltResult, setCCMsBuiltResult] = useState<number>(0);
+  const [ccmsInUseResult, setCCMsInUseResult] = useState<number>(0);
+  const [conditionGoodResult, setConditionGoodResult] = useState<number>(0);
+  const [kitchensResult, setKitchensResult] = useState<number>(0);
+  const [wellVentilatedResult, setWellVentilatedResult] = useState<number>(0);
+  const [rainProtectedResult, setRainProtectedResult] = useState<number>(0);
+  const [inspected0to3MonthsResult, setInspected0to3MonthsResult] =
+    useState<number>(0);
+  const [inspected3to6MonthsResult, setInspected3to6MonthsResult] =
+    useState<number>(0);
+  const [inspectedOver6MonthsResult, setInspectedOver6MonthsResult] =
+    useState<number>(0);
+
+  useEffect(() => {
+    const supabase = createClient();
+    let newChannel: RealtimeChannel | null = null;
+    let cancel = false;
+
+    function monthsSince(dateString: string | null): number | null {
+      if (!dateString) return null;
+      const now = new Date();
+      const then = new Date(dateString);
+      const diffMs = now.getTime() - then.getTime();
+      return diffMs < 0 ? 0 : diffMs / (1000 * 60 * 60 * 24 * 30);
+    }
+
+    async function setupChannel() {
+      try {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+
+        if (!session || cancel) return;
+
+        // Ensure Realtime auth is set for private channels
+        await supabase.realtime.setAuth(session.access_token);
+
+        newChannel = supabase.channel(`project_summary:${year}`, {
+          config: {
+            private: true,
+          },
+        });
+
+        newChannel.on("broadcast", { event: "*" }, (payload) => {
+          if (cancel) return;
+          const message = payload.payload as {
+            table?: string;
+            year?: number;
+            data?: Record<string, unknown>;
+          };
+          if (message?.year !== year || !message?.table) return;
+
+          const data = message.data ?? {};
+          const table = message.table;
+
+          if (table === "householders") {
+            setCCMsBuiltResult((prev) => prev + 1);
+
+            if (data.has_kitchen === true) {
+              setKitchensResult((prev) => prev + 1);
+            }
+            if (data.kitchen_well_ventilated === true) {
+              setWellVentilatedResult((prev) => prev + 1);
+            }
+            if (data.kitchen_rainproof === true) {
+              setRainProtectedResult((prev) => prev + 1);
+            }
+            if (data.last_ccm_in_use === true) {
+              setCCMsInUseResult((prev) => prev + 1);
+            }
+            if (data.last_ccm_condition === "good") {
+              setConditionGoodResult((prev) => prev + 1);
+            }
+
+            const months = monthsSince(
+              (data.last_inspection_date as string | null) ?? null,
+            );
+            if (months != null) {
+              if (months <= 3) {
+                setInspected0to3MonthsResult((prev) => prev + 1);
+              } else if (months <= 6) {
+                setInspected3to6MonthsResult((prev) => prev + 1);
+              } else {
+                setInspectedOver6MonthsResult((prev) => prev + 1);
+              }
+            }
+          }
+
+          if (table === "inspections") {
+            const months = monthsSince(
+              (data.inspection_date as string | null) ?? null,
+            );
+            if (months != null) {
+              if (months <= 3) {
+                setInspected0to3MonthsResult((prev) => prev + 1);
+              } else if (months <= 6) {
+                setInspected3to6MonthsResult((prev) => prev + 1);
+              } else {
+                setInspectedOver6MonthsResult((prev) => prev + 1);
+              }
+            }
+
+            if (data.ccm_in_use === true) {
+              setCCMsInUseResult((prev) => prev + 1);
+            }
+            if (data.ccm_condition === "good") {
+              setConditionGoodResult((prev) => prev + 1);
+            }
+            if (data.kitchen_well_ventilated === true) {
+              setWellVentilatedResult((prev) => prev + 1);
+            }
+            if (data.kitchen_rainproof === true) {
+              setRainProtectedResult((prev) => prev + 1);
+            }
+          }
+
+          if (table === "usage_surveys") {
+            if (data.ccm_in_use === true) {
+              setCCMsInUseResult((prev) => prev + 1);
+            }
+          }
+        });
+
+        void newChannel.subscribe();
+      } catch (error) {
+        console.error("Error setting up realtime channel: ", error);
+      }
+    }
+    void setupChannel();
+
+    return () => {
+      cancel = true;
+      if (newChannel) {
+        void supabase.removeChannel(newChannel);
+      }
+    };
+  }, [year]);
+
+  return {
+    ccmsBuiltResult,
+    ccmsInUseResult,
+    conditionGoodResult,
+    kitchensResult,
+    wellVentilatedResult,
+    rainProtectedResult,
+    inspected0to3MonthsResult,
+    inspected3to6MonthsResult,
+    inspectedOver6MonthsResult,
+  };
 }
 
 // async function getTotalCCMsBuilt({
