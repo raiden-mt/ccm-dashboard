@@ -26,21 +26,21 @@ import type { RealtimeChannel } from "@supabase/supabase-js";
 
 export function ProjectSummaryRealtime() {
   const {
-    ccmsBuiltResult,
-    ccmsInUseResult,
-    conditionGoodResult,
-    kitchensResult,
-    wellVentilatedResult,
-    rainProtectedResult,
-    inspected0to3MonthsResult,
-    inspected3to6MonthsResult,
-    inspectedOver6MonthsResult,
+    ccmsBuiltCount,
+    ccmsInUseCount,
+    conditionGoodCount,
+    kitchensCount,
+    wellVentilatedCount,
+    rainProtectedCount,
+    inspected0to3MonthsCount,
+    inspected3to6MonthsCount,
+    inspectedOver6MonthsCount,
   } = useRealtimeProjectSummary();
 
   const summaryItems = [
     {
       label: "Total CCMs Built",
-      value: ccmsBuiltResult.toLocaleString(),
+      value: ccmsBuiltCount.toLocaleString(),
       percent: null,
       icon: Flame,
       color: "text-primary",
@@ -48,88 +48,88 @@ export function ProjectSummaryRealtime() {
     },
     {
       label: "Total CCMs In Use",
-      value: ccmsInUseResult.toLocaleString(),
+      value: ccmsInUseCount.toLocaleString(),
       percent:
-        ccmsBuiltResult === 0
+        ccmsBuiltCount === 0
           ? null
-          : `${((ccmsInUseResult / ccmsBuiltResult) * 100).toFixed(0)}%`,
+          : `${((ccmsInUseCount / ccmsBuiltCount) * 100).toFixed(0)}%`,
       icon: Activity,
       color: "text-ripple-green",
       bgColor: "bg-ripple-green/10",
     },
     {
       label: "Condition Good/Average",
-      value: conditionGoodResult.toLocaleString(),
+      value: conditionGoodCount.toLocaleString(),
       percent:
-        ccmsBuiltResult === 0
+        ccmsBuiltCount === 0
           ? null
-          : `${((conditionGoodResult / ccmsBuiltResult) * 100).toFixed(0)}%`,
+          : `${((conditionGoodCount / ccmsBuiltCount) * 100).toFixed(0)}%`,
       icon: ThumbsUp,
       color: "text-ripple-green",
       bgColor: "bg-status-green",
     },
     {
       label: "Total Kitchens",
-      value: kitchensResult.toLocaleString(),
+      value: kitchensCount.toLocaleString(),
       percent:
-        ccmsBuiltResult === 0
+        ccmsBuiltCount === 0
           ? null
-          : `${((kitchensResult / ccmsBuiltResult) * 100).toFixed(0)}%`,
+          : `${((kitchensCount / ccmsBuiltCount) * 100).toFixed(0)}%`,
       icon: Home,
       color: "text-[#4A90A4]",
       bgColor: "bg-status-blue",
     },
     {
       label: "Well Ventilated",
-      value: wellVentilatedResult.toLocaleString(),
+      value: wellVentilatedCount.toLocaleString(),
       percent:
-        ccmsBuiltResult === 0
+        ccmsBuiltCount === 0
           ? null
-          : `${((wellVentilatedResult / ccmsBuiltResult) * 100).toFixed(0)}%`,
+          : `${((wellVentilatedCount / ccmsBuiltCount) * 100).toFixed(0)}%`,
       icon: Wind,
       color: "text-ripple-green",
       bgColor: "bg-action-mint/50",
     },
     {
       label: "Protected from Rain",
-      value: rainProtectedResult.toLocaleString(),
+      value: rainProtectedCount.toLocaleString(),
       percent:
-        ccmsBuiltResult === 0
+        ccmsBuiltCount === 0
           ? null
-          : `${((rainProtectedResult / kitchensResult) * 100).toFixed(0)}%`,
+          : `${((rainProtectedCount / kitchensCount) * 100).toFixed(0)}%`,
       icon: CloudRain,
       color: "text-[#4A90A4]",
       bgColor: "bg-status-blue",
     },
     {
       label: "Inspected 0-3 months",
-      value: inspected0to3MonthsResult.toLocaleString(),
+      value: inspected0to3MonthsCount.toLocaleString(),
       percent:
-        ccmsBuiltResult === 0
+        ccmsBuiltCount === 0
           ? null
-          : `${((inspected0to3MonthsResult / ccmsBuiltResult) * 100).toFixed(0)}%`,
+          : `${((inspected0to3MonthsCount / ccmsBuiltCount) * 100).toFixed(0)}%`,
       icon: CheckCircle2,
       color: "text-ripple-green",
       bgColor: "bg-status-green",
     },
     {
       label: "Inspected 3-6 months",
-      value: inspected3to6MonthsResult.toLocaleString(),
+      value: inspected3to6MonthsCount.toLocaleString(),
       percent:
-        ccmsBuiltResult === 0
+        ccmsBuiltCount === 0
           ? null
-          : `${((inspected3to6MonthsResult / ccmsBuiltResult) * 100).toFixed(0)}%`,
+          : `${((inspected3to6MonthsCount / ccmsBuiltCount) * 100).toFixed(0)}%`,
       icon: AlertCircle,
       color: "text-[#B8860B]",
       bgColor: "bg-status-tan",
     },
     {
       label: "Inspected > 6 months",
-      value: inspectedOver6MonthsResult.toLocaleString(),
+      value: inspectedOver6MonthsCount.toLocaleString(),
       percent:
-        ccmsBuiltResult === 0
+        ccmsBuiltCount === 0
           ? null
-          : `${((inspectedOver6MonthsResult / ccmsBuiltResult) * 100).toFixed(0)}%`,
+          : `${((inspectedOver6MonthsCount / ccmsBuiltCount) * 100).toFixed(0)}%`,
       icon: XCircle,
       color: "text-[#C75050]",
       bgColor: "bg-status-salmon",
@@ -180,17 +180,17 @@ function useRealtimeProjectSummary() {
   const searchParams = useSearchParams();
   const year = loadSearchParams(searchParams).year;
 
-  const [ccmsBuiltResult, setCCMsBuiltResult] = useState<number>(0);
-  const [ccmsInUseResult, setCCMsInUseResult] = useState<number>(0);
-  const [conditionGoodResult, setConditionGoodResult] = useState<number>(0);
-  const [kitchensResult, setKitchensResult] = useState<number>(0);
-  const [wellVentilatedResult, setWellVentilatedResult] = useState<number>(0);
-  const [rainProtectedResult, setRainProtectedResult] = useState<number>(0);
-  const [inspected0to3MonthsResult, setInspected0to3MonthsResult] =
+  const [ccmsBuiltCount, setCCMsBuiltCount] = useState<number>(0);
+  const [ccmsInUseCount, setCCMsInUseCount] = useState<number>(0);
+  const [conditionGoodCount, setConditionGoodCount] = useState<number>(0);
+  const [kitchensCount, setKitchensCount] = useState<number>(0);
+  const [wellVentilatedCount, setWellVentilatedCount] = useState<number>(0);
+  const [rainProtectedCount, setRainProtectedCount] = useState<number>(0);
+  const [inspected0to3MonthsCount, setInspected0to3MonthsCount] =
     useState<number>(0);
-  const [inspected3to6MonthsResult, setInspected3to6MonthsResult] =
+  const [inspected3to6MonthsCount, setInspected3to6MonthsCount] =
     useState<number>(0);
-  const [inspectedOver6MonthsResult, setInspectedOver6MonthsResult] =
+  const [inspectedOver6MonthsCount, setInspectedOver6MonthsCount] =
     useState<number>(0);
 
   useEffect(() => {
@@ -236,22 +236,22 @@ function useRealtimeProjectSummary() {
           const table = message.table;
 
           if (table === "householders") {
-            setCCMsBuiltResult((prev) => prev + 1);
+            setCCMsBuiltCount((prev) => prev + 1);
 
             if (data.has_kitchen === true) {
-              setKitchensResult((prev) => prev + 1);
+              setKitchensCount((prev) => prev + 1);
             }
             if (data.kitchen_well_ventilated === true) {
-              setWellVentilatedResult((prev) => prev + 1);
+              setWellVentilatedCount((prev) => prev + 1);
             }
             if (data.kitchen_rainproof === true) {
-              setRainProtectedResult((prev) => prev + 1);
+              setRainProtectedCount((prev) => prev + 1);
             }
             if (data.last_ccm_in_use === true) {
-              setCCMsInUseResult((prev) => prev + 1);
+              setCCMsInUseCount((prev) => prev + 1);
             }
             if (data.last_ccm_condition === "good") {
-              setConditionGoodResult((prev) => prev + 1);
+              setConditionGoodCount((prev) => prev + 1);
             }
 
             const months = monthsSince(
@@ -259,11 +259,11 @@ function useRealtimeProjectSummary() {
             );
             if (months != null) {
               if (months <= 3) {
-                setInspected0to3MonthsResult((prev) => prev + 1);
+                setInspected0to3MonthsCount((prev) => prev + 1);
               } else if (months <= 6) {
-                setInspected3to6MonthsResult((prev) => prev + 1);
+                setInspected3to6MonthsCount((prev) => prev + 1);
               } else {
-                setInspectedOver6MonthsResult((prev) => prev + 1);
+                setInspectedOver6MonthsCount((prev) => prev + 1);
               }
             }
           }
@@ -274,31 +274,31 @@ function useRealtimeProjectSummary() {
             );
             if (months != null) {
               if (months <= 3) {
-                setInspected0to3MonthsResult((prev) => prev + 1);
+                setInspected0to3MonthsCount((prev) => prev + 1);
               } else if (months <= 6) {
-                setInspected3to6MonthsResult((prev) => prev + 1);
+                setInspected3to6MonthsCount((prev) => prev + 1);
               } else {
-                setInspectedOver6MonthsResult((prev) => prev + 1);
+                setInspectedOver6MonthsCount((prev) => prev + 1);
               }
             }
 
             if (data.ccm_in_use === true) {
-              setCCMsInUseResult((prev) => prev + 1);
+              setCCMsInUseCount((prev) => prev + 1);
             }
             if (data.ccm_condition === "good") {
-              setConditionGoodResult((prev) => prev + 1);
+              setConditionGoodCount((prev) => prev + 1);
             }
             if (data.kitchen_well_ventilated === true) {
-              setWellVentilatedResult((prev) => prev + 1);
+              setWellVentilatedCount((prev) => prev + 1);
             }
             if (data.kitchen_rainproof === true) {
-              setRainProtectedResult((prev) => prev + 1);
+              setRainProtectedCount((prev) => prev + 1);
             }
           }
 
           if (table === "usage_surveys") {
             if (data.ccm_in_use === true) {
-              setCCMsInUseResult((prev) => prev + 1);
+              setCCMsInUseCount((prev) => prev + 1);
             }
           }
         });
@@ -319,14 +319,14 @@ function useRealtimeProjectSummary() {
   }, [year]);
 
   return {
-    ccmsBuiltResult,
-    ccmsInUseResult,
-    conditionGoodResult,
-    kitchensResult,
-    wellVentilatedResult,
-    rainProtectedResult,
-    inspected0to3MonthsResult,
-    inspected3to6MonthsResult,
-    inspectedOver6MonthsResult,
+    ccmsBuiltCount,
+    ccmsInUseCount,
+    conditionGoodCount,
+    kitchensCount,
+    wellVentilatedCount,
+    rainProtectedCount,
+    inspected0to3MonthsCount,
+    inspected3to6MonthsCount,
+    inspectedOver6MonthsCount,
   };
 }
