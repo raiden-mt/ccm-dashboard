@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { getCurrentUser } from "~/lib/services/supabase/lib/getCurrentUser";
 import { loadSearchParams } from "~/lib/search-params";
 import type { SearchParams } from "nuqs/server";
-import { ProjectSummaryRealtime } from "~/components/project-summary-realtime";
+import { ProjectSummaryWrapper } from "~/components/project-summary-wrapper";
 
 type PageProps = {
   searchParams: Promise<SearchParams>;
@@ -11,7 +11,6 @@ type PageProps = {
 
 export default async function DashboardPage({ searchParams }: PageProps) {
   const { year } = await loadSearchParams(searchParams);
-  console.log(year);
 
   const user = await getCurrentUser();
 
@@ -21,7 +20,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
   return (
     <>
       <div className="border-border border-b px-6 py-4">
-        <ProjectSummaryRealtime />
+        <ProjectSummaryWrapper year={year} />
       </div>
       <DashboardPageClient />
     </>

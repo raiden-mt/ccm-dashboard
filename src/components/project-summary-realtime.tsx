@@ -24,18 +24,54 @@ import { useEffect, useState } from "react";
 import { createClient } from "~/lib/services/supabase/client";
 import type { RealtimeChannel } from "@supabase/supabase-js";
 
-export function ProjectSummaryRealtime() {
+export function ProjectSummaryRealtime({
+  ccmsBuiltCount: initialCCMsBuiltCount,
+  ccmsInUseCount: initialCCMsInUseCount,
+  conditionGoodCount: initialConditionGoodCount,
+  kitchensCount: initialKitchensCount,
+  wellVentilatedCount: initialWellVentilatedCount,
+  rainProtectedCount: initialRainProtectedCount,
+  inspected0to3MonthsCount: initialInspected0to3MonthsCount,
+  inspected3to6MonthsCount: initialInspected3to6MonthsCount,
+  inspectedOver6MonthsCount: initialInspectedOver6MonthsCount,
+}: {
+  ccmsBuiltCount: number;
+  ccmsInUseCount: number;
+  conditionGoodCount: number;
+  kitchensCount: number;
+  wellVentilatedCount: number;
+  rainProtectedCount: number;
+  inspected0to3MonthsCount: number;
+  inspected3to6MonthsCount: number;
+  inspectedOver6MonthsCount: number;
+}) {
   const {
-    ccmsBuiltCount,
-    ccmsInUseCount,
-    conditionGoodCount,
-    kitchensCount,
-    wellVentilatedCount,
-    rainProtectedCount,
-    inspected0to3MonthsCount,
-    inspected3to6MonthsCount,
-    inspectedOver6MonthsCount,
+    ccmsBuiltCount: realtimeCCMsBuiltCount,
+    ccmsInUseCount: realtimeCCMsInUseCount,
+    conditionGoodCount: realtimeConditionGoodCount,
+    kitchensCount: realtimeKitchensCount,
+    wellVentilatedCount: realtimeWellVentilatedCount,
+    rainProtectedCount: realtimeRainProtectedCount,
+    inspected0to3MonthsCount: realtimeInspected0to3MonthsCount,
+    inspected3to6MonthsCount: realtimeInspected3to6MonthsCount,
+    inspectedOver6MonthsCount: realtimeInspectedOver6MonthsCount,
   } = useRealtimeProjectSummary();
+
+  const ccmsBuiltCount = initialCCMsBuiltCount + realtimeCCMsBuiltCount;
+  const ccmsInUseCount = initialCCMsInUseCount + realtimeCCMsInUseCount;
+  const conditionGoodCount =
+    initialConditionGoodCount + realtimeConditionGoodCount;
+  const kitchensCount = initialKitchensCount + realtimeKitchensCount;
+  const wellVentilatedCount =
+    initialWellVentilatedCount + realtimeWellVentilatedCount;
+  const rainProtectedCount =
+    initialRainProtectedCount + realtimeRainProtectedCount;
+  const inspected0to3MonthsCount =
+    initialInspected0to3MonthsCount + realtimeInspected0to3MonthsCount;
+  const inspected3to6MonthsCount =
+    initialInspected3to6MonthsCount + realtimeInspected3to6MonthsCount;
+  const inspectedOver6MonthsCount =
+    initialInspectedOver6MonthsCount + realtimeInspectedOver6MonthsCount;
 
   const summaryItems = [
     {
