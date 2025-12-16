@@ -1,12 +1,15 @@
 "use client";
 
 import { Card, CardContent } from "~/components/ui/card";
+import { Button } from "~/components/ui/button";
 import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "~/components/ui/accordion";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "~/components/ui/dialog";
 import {
   Flame,
   Activity,
@@ -17,6 +20,7 @@ import {
   CheckCircle2,
   AlertCircle,
   XCircle,
+  Eye,
 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { loadSearchParams } from "~/lib/search-params";
@@ -173,42 +177,56 @@ export function ProjectSummaryRealtime({
   ];
 
   return (
-    <Card className="bg-card-cream border-0 p-0 shadow-sm">
-      <Accordion type="single" collapsible className="w-full">
-        <AccordionItem value="project-summary">
-          <AccordionTrigger className="px-4 py-4">
+    <Dialog>
+      <Card className="bg-card-cream border-0 p-0 shadow-sm">
+        <CardContent className="flex items-center justify-between p-4">
+          <div>
             <h3 className="text-foreground text-lg font-semibold">
               CCM Project Summary
             </h3>
-          </AccordionTrigger>
-          <AccordionContent>
-            <CardContent className="p-4 pt-0">
-              <div className="grid grid-cols-2 gap-3 md:grid-cols-5 lg:grid-cols-9">
-                {summaryItems.map((item) => (
-                  <div
-                    key={item.label}
-                    className={`flex flex-col items-center rounded-lg p-3 text-center ${item.bgColor}`}
-                  >
-                    <item.icon className={`mb-1 h-5 w-5 ${item.color}`} />
-                    <span className="text-foreground text-lg font-bold">
-                      {item.value}
-                    </span>
-                    {item.percent && (
-                      <span className="text-muted-foreground text-xs font-medium">
-                        {item.percent}
-                      </span>
-                    )}
-                    <span className="text-muted-foreground mt-1 text-xs leading-tight">
-                      {item.label}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
-    </Card>
+            <p className="text-muted-foreground text-sm">
+              Live counts update as data changes.
+            </p>
+          </div>
+          <DialogTrigger asChild>
+            <Button className="flex items-center gap-2">
+              <Eye className="h-4 w-4" />
+              View Project Summary
+            </Button>
+          </DialogTrigger>
+        </CardContent>
+      </Card>
+
+      <DialogContent className="sm:max-w-3xl lg:max-w-5xl">
+        <DialogHeader className="pb-2">
+          <DialogTitle>CCM Project Summary</DialogTitle>
+          <DialogDescription>
+            Realtime snapshot of project metrics for the selected year.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5">
+          {summaryItems.map((item) => (
+            <div
+              key={item.label}
+              className={`flex flex-col items-center rounded-lg p-3 text-center ${item.bgColor}`}
+            >
+              <item.icon className={`mb-1 h-5 w-5 ${item.color}`} />
+              <span className="text-foreground text-lg font-bold">
+                {item.value}
+              </span>
+              {item.percent && (
+                <span className="text-muted-foreground text-xs font-medium">
+                  {item.percent}
+                </span>
+              )}
+              <span className="text-muted-foreground mt-1 text-xs leading-tight">
+                {item.label}
+              </span>
+            </div>
+          ))}
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
 

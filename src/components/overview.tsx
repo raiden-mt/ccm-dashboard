@@ -28,13 +28,8 @@ import {
   Legend,
 } from "recharts";
 
-interface OverviewProps {
-  isExecutive: boolean;
-}
-
-export function DashboardOverview({ isExecutive }: OverviewProps) {
+export function DashboardOverview() {
   const stats = dashboardStats;
-
   const statusData = [
     {
       name: "Green (0-3 mo)",
@@ -60,12 +55,10 @@ export function DashboardOverview({ isExecutive }: OverviewProps) {
     <div className="space-y-6">
       <div>
         <h2 className="text-foreground text-2xl font-semibold">
-          {isExecutive ? "Executive Dashboard" : "Dashboard Overview"}
+          Dashboard Overview
         </h2>
         <p className="text-muted-foreground">
-          {isExecutive
-            ? "High-level statistics for reporting and marketing purposes"
-            : "Complete overview of CCM database operations"}
+          Complete overview of CCM database operations
         </p>
       </div>
 
