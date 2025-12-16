@@ -17,6 +17,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
   if (!user) {
     redirect("/auth/login");
   }
+
   return (
     <>
       <div className="border-border border-b px-6 py-4">

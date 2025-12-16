@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { loadSearchParams } from "~/lib/search-params";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createClient } from "~/lib/services/supabase/client";
 import type { RealtimeChannel } from "@supabase/supabase-js";
 
@@ -214,7 +214,10 @@ export function ProjectSummaryRealtime({
 
 function useRealtimeProjectSummary() {
   const searchParams = useSearchParams();
-  const year = loadSearchParams(searchParams).year;
+  const year = Number(loadSearchParams(searchParams).year);
+
+  const yearRef = useRef<number>(year);
+  yearRef.current = year;
 
   const [ccmsBuiltCount, setCCMsBuiltCount] = useState<number>(0);
   const [ccmsInUseCount, setCCMsInUseCount] = useState<number>(0);
@@ -231,8 +234,22 @@ function useRealtimeProjectSummary() {
 
   useEffect(() => {
     const supabase = createClient();
-    let newChannel: RealtimeChannel | null = null;
-    let cancel = false;
+    let channel: RealtimeChannel | null = null;
+    let cancelled = false;
+
+    const resetDeltas = () => {
+      setCCMsBuiltCount(0);
+      setCCMsInUseCount(0);
+      setConditionGoodCount(0);
+      setKitchensCount(0);
+      setWellVentilatedCount(0);
+      setRainProtectedCount(0);
+      setInspected0to3MonthsCount(0);
+      setInspected3to6MonthsCount(0);
+      setInspectedOver6MonthsCount(0);
+    };
+
+    resetDeltas();
 
     function monthsSince(dateString: string | null): number | null {
       if (!dateString) return null;
@@ -242,104 +259,106 @@ function useRealtimeProjectSummary() {
       return diffMs < 0 ? 0 : diffMs / (1000 * 60 * 60 * 24 * 30);
     }
 
+    function yearFromDate(dateString: unknown): number | null {
+      if (typeof dateString !== "string" || !dateString) return null;
+      const d = new Date(dateString);
+      const y = d.getFullYear();
+      return Number.isFinite(y) ? y : null;
+    }
+
     async function setupChannel() {
       try {
         const {
           data: { session },
         } = await supabase.auth.getSession();
+        if (!session || cancelled) return;
 
-        if (!session || cancel) return;
-
-        // Ensure Realtime auth is set for private channels
+        // Ensures Postgres changes are authorized under the current user's RLS.
         await supabase.realtime.setAuth(session.access_token);
+        if (cancelled) return;
 
-        newChannel = supabase.channel(`project_summary:${year}`, {
-          config: {
-            private: true,
-          },
-        });
+        // Public channel; we filter events client-side by selected year.
+        channel = supabase.channel("project_summary");
 
-        newChannel.on("broadcast", { event: "*" }, (payload) => {
-          if (cancel) return;
-          const message = payload.payload as {
-            table?: string;
-            year?: number;
-            data?: Record<string, unknown>;
-          };
-          if (message?.year !== year || !message?.table) return;
+        // Postgres changes drive the UI updates (inserts).
+        channel.on(
+          "postgres_changes",
+          { event: "INSERT", schema: "public", table: "householders" },
+          (payload) => {
+            const row =
+              (payload as { new?: Record<string, unknown> }).new ?? {};
 
-          const data = message.data ?? {};
-          const table = message.table;
+            const eventYear = yearFromDate(row.stove_build_date);
+            if (eventYear !== yearRef.current) return;
 
-          if (table === "householders") {
             setCCMsBuiltCount((prev) => prev + 1);
-
-            if (data.has_kitchen === true) {
-              setKitchensCount((prev) => prev + 1);
-            }
-            if (data.kitchen_well_ventilated === true) {
+            if (row.has_kitchen === true) setKitchensCount((prev) => prev + 1);
+            if (row.kitchen_well_ventilated === true)
               setWellVentilatedCount((prev) => prev + 1);
-            }
-            if (data.kitchen_rainproof === true) {
+            if (row.kitchen_rainproof === true)
               setRainProtectedCount((prev) => prev + 1);
-            }
-            if (data.last_ccm_in_use === true) {
+            if (row.last_ccm_in_use === true)
               setCCMsInUseCount((prev) => prev + 1);
-            }
-            if (data.last_ccm_condition === "good") {
+            if (row.last_ccm_condition === "good")
               setConditionGoodCount((prev) => prev + 1);
-            }
 
             const months = monthsSince(
-              (data.last_inspection_date as string | null) ?? null,
+              (row.last_inspection_date as string | null) ?? null,
             );
             if (months != null) {
-              if (months <= 3) {
-                setInspected0to3MonthsCount((prev) => prev + 1);
-              } else if (months <= 6) {
+              if (months <= 3) setInspected0to3MonthsCount((prev) => prev + 1);
+              else if (months <= 6)
                 setInspected3to6MonthsCount((prev) => prev + 1);
-              } else {
-                setInspectedOver6MonthsCount((prev) => prev + 1);
-              }
+              else setInspectedOver6MonthsCount((prev) => prev + 1);
             }
-          }
+          },
+        );
 
-          if (table === "inspections") {
+        channel.on(
+          "postgres_changes",
+          { event: "INSERT", schema: "public", table: "inspections" },
+          (payload) => {
+            const row =
+              (payload as { new?: Record<string, unknown> }).new ?? {};
+
+            const eventYear = yearFromDate(row.inspection_date);
+            if (eventYear !== yearRef.current) return;
+
             const months = monthsSince(
-              (data.inspection_date as string | null) ?? null,
+              (row.inspection_date as string | null) ?? null,
             );
             if (months != null) {
-              if (months <= 3) {
-                setInspected0to3MonthsCount((prev) => prev + 1);
-              } else if (months <= 6) {
+              if (months <= 3) setInspected0to3MonthsCount((prev) => prev + 1);
+              else if (months <= 6)
                 setInspected3to6MonthsCount((prev) => prev + 1);
-              } else {
-                setInspectedOver6MonthsCount((prev) => prev + 1);
-              }
+              else setInspectedOver6MonthsCount((prev) => prev + 1);
             }
 
-            if (data.ccm_in_use === true) {
-              setCCMsInUseCount((prev) => prev + 1);
-            }
-            if (data.ccm_condition === "good") {
+            if (row.ccm_in_use === true) setCCMsInUseCount((prev) => prev + 1);
+            if (row.ccm_condition === "good")
               setConditionGoodCount((prev) => prev + 1);
-            }
-            if (data.kitchen_well_ventilated === true) {
+            if (row.kitchen_well_ventilated === true)
               setWellVentilatedCount((prev) => prev + 1);
-            }
-            if (data.kitchen_rainproof === true) {
+            if (row.kitchen_rainproof === true)
               setRainProtectedCount((prev) => prev + 1);
-            }
-          }
+          },
+        );
 
-          if (table === "usage_surveys") {
-            if (data.ccm_in_use === true) {
-              setCCMsInUseCount((prev) => prev + 1);
-            }
-          }
-        });
+        channel.on(
+          "postgres_changes",
+          { event: "INSERT", schema: "public", table: "usage_surveys" },
+          (payload) => {
+            const row =
+              (payload as { new?: Record<string, unknown> }).new ?? {};
 
-        void newChannel.subscribe();
+            const eventYear = yearFromDate(row.survey_date);
+            if (eventYear !== yearRef.current) return;
+
+            if (row.ccm_in_use === true) setCCMsInUseCount((prev) => prev + 1);
+          },
+        );
+
+        void channel.subscribe();
       } catch (error) {
         console.error("Error setting up realtime channel: ", error);
       }
@@ -347,10 +366,8 @@ function useRealtimeProjectSummary() {
     void setupChannel();
 
     return () => {
-      cancel = true;
-      if (newChannel) {
-        void supabase.removeChannel(newChannel);
-      }
+      cancelled = true;
+      if (channel) void supabase.removeChannel(channel);
     };
   }, [year]);
 
