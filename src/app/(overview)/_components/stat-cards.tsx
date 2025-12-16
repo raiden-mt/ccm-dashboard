@@ -1,5 +1,3 @@
-"use client";
-
 import { StatCard } from "~/components/ui/stat-card";
 import { dashboardStats } from "~/lib/mock-data";
 import { Users, Home, Flame, ClipboardCheck } from "lucide-react";
