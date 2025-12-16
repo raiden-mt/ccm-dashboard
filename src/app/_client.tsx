@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { DashboardSidebar } from "~/components/sidebar";
-import { ProjectSummary } from "~/components/project-summary";
 import { DashboardOverview } from "~/components/overview";
 import { DataExtraction } from "~/components/data-extraction";
 import { AutomatedChecks } from "~/components/automated-checks";
