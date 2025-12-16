@@ -1,4 +1,4 @@
-import DashboardPageClient from "./_client";
+import DashboardPageClient from "./(overview)/_client";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "~/lib/services/supabase/lib/getCurrentUser";
 import { loadSearchParams } from "~/lib/search-params";
