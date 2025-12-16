@@ -2,7 +2,7 @@ import { StatCard } from "~/components/ui/stat-card";
 import { dashboardStats } from "~/lib/mock-data";
 import { Users, Home, Flame, ClipboardCheck } from "lucide-react";
 
-export function StatCards() {
+export function StatCardsWrapper() {
   const stats = dashboardStats;
 
   return (

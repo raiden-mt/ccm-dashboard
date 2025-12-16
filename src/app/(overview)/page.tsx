@@ -3,7 +3,7 @@ import { getCurrentUser } from "~/lib/services/supabase/lib/getCurrentUser";
 import { loadSearchParams } from "~/lib/search-params";
 import type { SearchParams } from "nuqs/server";
 import { ProjectSummaryWrapper } from "~/components/project-summary-wrapper";
-import { StatCards } from "./_components/stat-cards";
+import { StatCardsWrapper } from "./_components/dashboard-stat-cards";
 import { InspectionStatusDistribution } from "./_components/inspection-status-distribution";
 import { ActiveStovesByVPA } from "./_components/active-stoves-by-vpa";
 import { SurveyCompletion } from "./_components/survey-completion";
@@ -41,7 +41,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
             </div>
 
             {/* Key Metrics */}
-            <StatCards />
+            <StatCardsWrapper />
 
             {/* Charts Row */}
             <div className="grid gap-6 lg:grid-cols-2">
