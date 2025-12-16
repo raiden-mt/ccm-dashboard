@@ -1,6 +1,5 @@
 "use client";
 
-import { Card, CardContent } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import {
   Dialog,
@@ -178,25 +177,12 @@ export function ProjectSummaryRealtime({
 
   return (
     <Dialog>
-      <Card className="bg-card-cream border-0 p-0 shadow-sm">
-        <CardContent className="flex items-center justify-between p-4">
-          <div>
-            <h3 className="text-foreground text-lg font-semibold">
-              CCM Project Summary
-            </h3>
-            <p className="text-muted-foreground text-sm">
-              Live counts update as data changes.
-            </p>
-          </div>
-          <DialogTrigger asChild>
-            <Button className="flex items-center gap-2">
-              <Eye className="h-4 w-4" />
-              View Project Summary
-            </Button>
-          </DialogTrigger>
-        </CardContent>
-      </Card>
-
+      <DialogTrigger asChild>
+        <Button className="flex items-center gap-2">
+          <Eye className="h-4 w-4" />
+          View Project Summary
+        </Button>
+      </DialogTrigger>
       <DialogContent className="sm:max-w-3xl lg:max-w-5xl">
         <DialogHeader className="pb-2">
           <DialogTitle>CCM Project Summary</DialogTitle>

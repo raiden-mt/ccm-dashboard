@@ -1,9 +1,13 @@
-import DashboardPageClient from "./(overview)/_client";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "~/lib/services/supabase/lib/getCurrentUser";
 import { loadSearchParams } from "~/lib/search-params";
 import type { SearchParams } from "nuqs/server";
 import { ProjectSummaryWrapper } from "~/components/project-summary-wrapper";
+import { StatCards } from "./_components/stat-cards";
+import { InspectionStatusDistribution } from "./_components/inspection-status-distribution";
+import { ActiveStovesByVPA } from "./_components/active-stoves-by-vpa";
+import { SurveyCompletion } from "./_components/survey-completion";
+import { DataQualityAlerts } from "./_components/data-quality-alerts";
 
 type PageProps = {
   searchParams: Promise<SearchParams>;
@@ -19,11 +23,40 @@ export default async function DashboardPage({ searchParams }: PageProps) {
   }
 
   return (
-    <>
-      <div className="border-border border-b px-6 py-4">
-        <ProjectSummaryWrapper year={year} />
+    <div className="bg-background flex min-h-screen flex-col">
+      <div className="flex flex-1">
+        <main className="flex-1 overflow-auto p-2 md:p-6">
+          <div className="space-y-6 px-2">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-foreground text-2xl font-semibold">
+                  Dashboard Overview
+                </h2>
+                <p className="text-muted-foreground hidden md:block">
+                  Complete overview of CCM database operations
+                </p>
+              </div>
+
+              <ProjectSummaryWrapper year={year} />
+            </div>
+
+            {/* Key Metrics */}
+            <StatCards />
+
+            {/* Charts Row */}
+            <div className="grid gap-6 lg:grid-cols-2">
+              <InspectionStatusDistribution />
+              <ActiveStovesByVPA />
+            </div>
+
+            {/* Survey Stats & Data Quality */}
+            <div className="grid gap-6 lg:grid-cols-2">
+              <SurveyCompletion />
+              <DataQualityAlerts />
+            </div>
+          </div>
+        </main>
       </div>
-      <DashboardPageClient />
-    </>
+    </div>
   );
 }
