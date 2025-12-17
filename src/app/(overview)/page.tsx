@@ -41,7 +41,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
             </div>
 
             {/* Key Metrics */}
-            <StatCardsWrapper />
+            <StatCardsWrapper year={String(year)} />
 
             {/* Charts Row */}
             <div className="grid gap-6 lg:grid-cols-2">
