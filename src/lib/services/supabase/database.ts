@@ -350,6 +350,7 @@ export type Database = {
         Row: {
           archive_notes: string | null
           archive_reason: Database["public"]["Enums"]["archive_reason"] | null
+          archive_status: Database["public"]["Enums"]["householder_archive_status"]
           archived_at: string | null
           archived_by_id: string | null
           carbon_rights_explained: boolean | null
@@ -364,7 +365,7 @@ export type Database = {
           has_kitchen: boolean | null
           house_ownership: Database["public"]["Enums"]["house_ownership"] | null
           id: string
-          is_archived: boolean | null
+          is_archived: boolean
           is_verified: boolean | null
           kitchen_image_path: string | null
           kitchen_rainproof: boolean | null
@@ -393,6 +394,7 @@ export type Database = {
         Insert: {
           archive_notes?: string | null
           archive_reason?: Database["public"]["Enums"]["archive_reason"] | null
+          archive_status?: Database["public"]["Enums"]["householder_archive_status"]
           archived_at?: string | null
           archived_by_id?: string | null
           carbon_rights_explained?: boolean | null
@@ -409,7 +411,7 @@ export type Database = {
             | Database["public"]["Enums"]["house_ownership"]
             | null
           id?: string
-          is_archived?: boolean | null
+          is_archived?: boolean
           is_verified?: boolean | null
           kitchen_image_path?: string | null
           kitchen_rainproof?: boolean | null
@@ -438,6 +440,7 @@ export type Database = {
         Update: {
           archive_notes?: string | null
           archive_reason?: Database["public"]["Enums"]["archive_reason"] | null
+          archive_status?: Database["public"]["Enums"]["householder_archive_status"]
           archived_at?: string | null
           archived_by_id?: string | null
           carbon_rights_explained?: boolean | null
@@ -454,7 +457,7 @@ export type Database = {
             | Database["public"]["Enums"]["house_ownership"]
             | null
           id?: string
-          is_archived?: boolean | null
+          is_archived?: boolean
           is_verified?: boolean | null
           kitchen_image_path?: string | null
           kitchen_rainproof?: boolean | null
@@ -1288,6 +1291,9 @@ export type Database = {
         Row: {
           archive_notes: string | null
           archive_reason: Database["public"]["Enums"]["archive_reason"] | null
+          archive_status:
+            | Database["public"]["Enums"]["householder_archive_status"]
+            | null
           archived_at: string | null
           archived_by_id: string | null
           carbon_rights_explained: boolean | null
@@ -1787,8 +1793,8 @@ export type Database = {
       get_household_stats: {
         Args: { p_year: string }
         Returns: {
+          archived_households: number
           active_households: number
-          total_households: number
         }[]
       }
       get_inspected_0_to_3_months_count: {
@@ -1829,6 +1835,7 @@ export type Database = {
         Returns: {
           archive_notes: string | null
           archive_reason: Database["public"]["Enums"]["archive_reason"] | null
+          archive_status: Database["public"]["Enums"]["householder_archive_status"]
           archived_at: string | null
           archived_by_id: string | null
           carbon_rights_explained: boolean | null
@@ -1843,7 +1850,7 @@ export type Database = {
           has_kitchen: boolean | null
           house_ownership: Database["public"]["Enums"]["house_ownership"] | null
           id: string
-          is_archived: boolean | null
+          is_archived: boolean
           is_verified: boolean | null
           kitchen_image_path: string | null
           kitchen_rainproof: boolean | null
@@ -2540,6 +2547,7 @@ export type Database = {
       ccm_condition: "good" | "needs_repair" | "damaged" | "replaced"
       gender: "male" | "female" | "other"
       house_ownership: "owned" | "rented" | "family"
+      householder_archive_status: "active" | "temporary" | "permanent"
       inspection_color: "green" | "yellow" | "red" | "uninspected"
       season: "dry" | "wet"
       staff_position:

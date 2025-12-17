@@ -3,7 +3,7 @@ import { Users, Home, Flame, ClipboardCheck } from "lucide-react";
 import { createAdminClient } from "~/lib/services/supabase/server";
 
 interface DashboardStats {
-  totalHouseholds: number;
+  archivedHouseholds: number;
   activeHouseholds: number;
   totalStoves: number;
   activeStoves: number;
@@ -14,7 +14,7 @@ interface DashboardStats {
 }
 
 interface HouseholdStatsResult {
-  total_households: number;
+  archived_households: number;
   active_households: number;
 }
 
@@ -49,7 +49,7 @@ async function getDashboardStats({
     ]);
 
   const defaultHousehold: HouseholdStatsResult = {
-    total_households: 0,
+    archived_households: 0,
     active_households: 0,
   };
   const defaultStove: StoveStatsResult = { total_stoves: 0, active_stoves: 0 };
@@ -70,7 +70,7 @@ async function getDashboardStats({
   const inspection = inspectionData?.[0] ?? defaultInspection;
 
   return {
-    totalHouseholds: Number(household.total_households),
+    archivedHouseholds: Number(household.archived_households),
     activeHouseholds: Number(household.active_households),
     totalStoves: Number(stove.total_stoves),
     activeStoves: Number(stove.active_stoves),
@@ -92,8 +92,8 @@ export async function StatCardsWrapper({ year }: { year: string }) {
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
       <StatCard
-        title="Total Households"
-        value={stats.totalHouseholds}
+        title="Archived Households"
+        value={stats.archivedHouseholds}
         subtitle={`${stats.activeHouseholds.toLocaleString()} active`}
         icon={Home}
         color="ripple-green"
