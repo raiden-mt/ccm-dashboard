@@ -179,8 +179,9 @@ export function ProjectSummaryRealtime({
     <Dialog>
       <DialogTrigger asChild>
         <Button className="flex items-center gap-2">
-          <Eye className="h-4 w-4" />
-          View Project Summary
+          <Eye className="hidden h-4 w-4 sm:block" />
+          <span className="sm:hidden">View Summary</span>
+          <span className="hidden sm:inline">View Project Summary</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-3xl lg:max-w-5xl">
