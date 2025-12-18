@@ -23,11 +23,11 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${geist.variable}`}>
-      <body>
+      <body className="h-dvh overflow-hidden">
         <NuqsAdapter>
-          <div className="flex max-h-dvh w-full flex-col">
+          <div className="grid h-dvh w-full grid-rows-[auto,1fr] overflow-hidden">
             <DashboardHeader />
-            <main className="flex flex-1 overflow-y-auto">{children}</main>
+            <main className="min-h-0 overflow-hidden">{children}</main>
           </div>
         </NuqsAdapter>
       </body>

@@ -23,39 +23,35 @@ export default async function DashboardPage({ searchParams }: PageProps) {
   }
 
   return (
-    <div className="bg-background flex min-h-screen flex-col">
-      <div className="flex flex-1">
-        <main className="flex-1 overflow-auto p-2 md:p-6">
-          <div className="space-y-6 px-2">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-foreground text-2xl font-semibold">
-                  Dashboard Overview
-                </h2>
-                <p className="text-muted-foreground hidden md:block">
-                  Complete overview of CCM database operations
-                </p>
-              </div>
-
-              <ProjectSummaryWrapper year={year} />
-            </div>
-
-            {/* Key Metrics */}
-            <StatCardsWrapper year={String(year)} />
-
-            {/* Charts Row */}
-            <div className="grid gap-6 lg:grid-cols-2">
-              <InspectionStatusDistribution />
-              <ActiveStovesByVPA />
-            </div>
-
-            {/* Survey Stats & Data Quality */}
-            <div className="grid gap-6 lg:grid-cols-2">
-              <SurveyCompletion />
-              <DataQualityAlerts />
-            </div>
+    <div className="bg-background p-2 md:p-6">
+      <div className="space-y-6 p-3">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-foreground text-2xl font-semibold">
+              Dashboard Overview
+            </h2>
+            <p className="text-muted-foreground hidden md:block">
+              Complete overview of CCM database operations
+            </p>
           </div>
-        </main>
+
+          <ProjectSummaryWrapper year={year} />
+        </div>
+
+        {/* Key Metrics */}
+        <StatCardsWrapper year={String(year)} />
+
+        {/* Charts Row */}
+        <div className="grid gap-6 lg:grid-cols-2">
+          <InspectionStatusDistribution />
+          <ActiveStovesByVPA />
+        </div>
+
+        {/* Survey Stats & Data Quality */}
+        <div className="grid gap-6 lg:grid-cols-2">
+          <SurveyCompletion />
+          <DataQualityAlerts />
+        </div>
       </div>
     </div>
   );

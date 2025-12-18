@@ -7,10 +7,10 @@ export default function MainLayout({
   children: React.ReactNode;
 }) {
   return (
-    <SidebarProvider>
+    <SidebarProvider className="min-h-0 overflow-hidden">
       <AppSidebar />
-      <section className="flex-1 overflow-y-auto">
-        <SidebarTrigger className="sticky top-0" />
+      <section className="relative min-h-0 flex-1 overflow-y-auto">
+        <SidebarTrigger className="absolute top-0" />
         {children}
       </section>
     </SidebarProvider>
