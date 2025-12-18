@@ -23,7 +23,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${geist.variable}`}>
-      <body className="h-dvh overflow-hidden">
+      <body className="h-dvh overflow-hidden [--header-height:5rem]">
         <NuqsAdapter>
           <div className="grid h-dvh w-full grid-rows-[auto,1fr] overflow-hidden">
             <DashboardHeader />
