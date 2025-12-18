@@ -31,4 +31,3 @@ export function SidebarHeaderTrigger({ className }: SidebarHeaderTriggerProps) {
     </Button>
   );
 }
-
