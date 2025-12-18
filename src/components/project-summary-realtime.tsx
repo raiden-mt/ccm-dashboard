@@ -23,9 +23,9 @@ import {
 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { loadSearchParams } from "~/lib/search-params";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { createClient } from "~/lib/services/supabase/client";
-import type { RealtimeChannel } from "@supabase/supabase-js";
+import type { RealtimeChannel, Session } from "@supabase/supabase-js";
 
 export function ProjectSummaryRealtime({
   ccmsBuiltCount: initialCCMsBuiltCount,
@@ -221,9 +221,6 @@ function useRealtimeProjectSummary() {
   const searchParams = useSearchParams();
   const year = Number(loadSearchParams(searchParams).year);
 
-  const yearRef = useRef<number>(year);
-  yearRef.current = year;
-
   const [ccmsBuiltCount, setCCMsBuiltCount] = useState<number>(0);
   const [ccmsInUseCount, setCCMsInUseCount] = useState<number>(0);
   const [conditionGoodCount, setConditionGoodCount] = useState<number>(0);
@@ -240,6 +237,7 @@ function useRealtimeProjectSummary() {
   useEffect(() => {
     const supabase = createClient();
     let channel: RealtimeChannel | null = null;
+    let authSubscription: { unsubscribe: () => void } | null = null;
     let cancelled = false;
 
     const resetDeltas = () => {
@@ -271,19 +269,18 @@ function useRealtimeProjectSummary() {
       return Number.isFinite(y) ? y : null;
     }
 
-    async function setupChannel() {
-      try {
-        const {
-          data: { session },
-        } = await supabase.auth.getSession();
-        if (!session || cancelled) return;
+    async function subscribeToChannel(session: Session | null) {
+      if (cancelled || !session) return;
 
-        // Ensures Postgres changes are authorized under the current user's RLS.
+      try {
+        // Keep Realtime auth fresh; if we already have a channel, just refresh auth.
         await supabase.realtime.setAuth(session.access_token);
         if (cancelled) return;
 
+        if (channel) return;
+
         // Public channel; we filter events client-side by selected year.
-        channel = supabase.channel("project_summary");
+        channel = supabase.channel(`project_summary:${year}`);
 
         // Postgres changes drive the UI updates (inserts).
         channel.on(
@@ -294,7 +291,7 @@ function useRealtimeProjectSummary() {
               (payload as { new?: Record<string, unknown> }).new ?? {};
 
             const eventYear = yearFromDate(row.stove_build_date);
-            if (eventYear !== yearRef.current) return;
+            if (eventYear !== year) return;
 
             setCCMsBuiltCount((prev) => prev + 1);
             if (row.has_kitchen === true) setKitchensCount((prev) => prev + 1);
@@ -327,7 +324,7 @@ function useRealtimeProjectSummary() {
               (payload as { new?: Record<string, unknown> }).new ?? {};
 
             const eventYear = yearFromDate(row.inspection_date);
-            if (eventYear !== yearRef.current) return;
+            if (eventYear !== year) return;
 
             const months = monthsSince(
               (row.inspection_date as string | null) ?? null,
@@ -357,22 +354,43 @@ function useRealtimeProjectSummary() {
               (payload as { new?: Record<string, unknown> }).new ?? {};
 
             const eventYear = yearFromDate(row.survey_date);
-            if (eventYear !== yearRef.current) return;
+            if (eventYear !== year) return;
 
             if (row.ccm_in_use === true) setCCMsInUseCount((prev) => prev + 1);
           },
         );
 
-        void channel.subscribe();
+        void channel.subscribe((status) => {
+          if ((status as string) === "CHANNEL_ERROR") {
+            console.error("Realtime channel error: project_summary");
+          }
+        });
       } catch (error) {
         console.error("Error setting up realtime channel: ", error);
       }
     }
-    void setupChannel();
+
+    async function setup() {
+      // Register listener first to avoid missing INITIAL_SESSION.
+      const { data } = supabase.auth.onAuthStateChange((_event, newSession) => {
+        if (cancelled) return;
+        void subscribeToChannel(newSession ?? null);
+      });
+      authSubscription = data.subscription;
+
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      await subscribeToChannel(session);
+    }
+
+    void setup();
 
     return () => {
       cancelled = true;
       if (channel) void supabase.removeChannel(channel);
+      if (authSubscription) authSubscription.unsubscribe();
     };
   }, [year]);
 
