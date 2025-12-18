@@ -10,9 +10,6 @@ export default function MainLayout({
     <SidebarProvider className="min-h-0 overflow-hidden">
       <AppSidebar />
       <section className="relative min-h-0 flex-1 overflow-y-auto">
-        <div className="sticky top-0 z-20 flex items-start p-2">
-          <SidebarTrigger />
-        </div>
         {children}
       </section>
     </SidebarProvider>

@@ -4,6 +4,7 @@ import { createAdminClient } from "~/lib/services/supabase/server";
 import { AlertCircle } from "lucide-react";
 import { getCurrentUser } from "~/lib/services/supabase/lib/getCurrentUser";
 import { LogoutButton } from "~/lib/services/supabase/components/logout-button";
+import { SidebarHeaderTrigger } from "./sidebar-header-trigger";
 
 export async function DashboardHeader() {
   const [result, user] = await Promise.all([getYears(), getCurrentUser()]);
@@ -26,7 +27,8 @@ export async function DashboardHeader() {
           </div>
         </div>
         {user && (
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
+            <SidebarHeaderTrigger />
             {result.error ? (
               <p className="text-red-500">
                 <AlertCircle />
