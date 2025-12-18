@@ -10,6 +10,9 @@ export function LogoutButton() {
   const logout = async () => {
     const supabase = createClient();
     await supabase.auth.signOut();
+    // `DashboardHeader` is a Server Component in a persistent layout; refresh the RSC tree
+    // so auth-dependent UI updates immediately without a full page reload.
+    router.refresh();
     router.push("/auth/login");
   };
 
