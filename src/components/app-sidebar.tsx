@@ -117,7 +117,7 @@ export function AppSidebar() {
   ];
 
   return (
-    <Sidebar className="static flex">
+    <Sidebar>
       <SidebarHeader />
       <SidebarContent>
         {navigationGroups.map((group, groupIdx) => (

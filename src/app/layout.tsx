@@ -4,8 +4,6 @@ import { type Metadata } from "next";
 import { Geist } from "next/font/google";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { DashboardHeader } from "~/components/header";
-import { SidebarProvider, SidebarTrigger } from "~/components/ui/sidebar";
-import { AppSidebar } from "~/components/app-sidebar";
 
 export const metadata: Metadata = {
   title: "CCM Database Dashboard",
@@ -25,20 +23,12 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${geist.variable}`}>
-      <body>
+      <body className="h-dvh overflow-hidden [--header-height:5rem]">
         <NuqsAdapter>
-          <SidebarProvider>
-            <div className="flex max-h-dvh w-full flex-col">
-              <DashboardHeader />
-              <main className="flex flex-1 overflow-y-auto">
-                <AppSidebar />
-                <section className="flex-1 overflow-y-auto">
-                  <SidebarTrigger className="sticky top-0" />
-                  {children}
-                </section>
-              </main>
-            </div>
-          </SidebarProvider>
+          <div className="grid h-dvh w-full grid-rows-[auto,1fr] overflow-hidden">
+            <DashboardHeader />
+            <main className="min-h-0 overflow-hidden">{children}</main>
+          </div>
         </NuqsAdapter>
       </body>
     </html>

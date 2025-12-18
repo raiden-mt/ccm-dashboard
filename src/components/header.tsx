@@ -4,6 +4,7 @@ import { createAdminClient } from "~/lib/services/supabase/server";
 import { AlertCircle } from "lucide-react";
 import { getCurrentUser } from "~/lib/services/supabase/lib/getCurrentUser";
 import { LogoutButton } from "~/lib/services/supabase/components/logout-button";
+import { SidebarHeaderTrigger } from "./sidebar-header-trigger";
 
 export async function DashboardHeader() {
   const [result, user] = await Promise.all([getYears(), getCurrentUser()]);
@@ -14,16 +15,20 @@ export async function DashboardHeader() {
         <div className="flex items-center gap-4">
           <Image src="/logo.png" alt="CCM Logo" width={40} height={40} />
           <div>
-            <h1 className="text-primary-foreground text-xl font-semibold">
+            <h1 className="text-primary-foreground hidden text-xl font-semibold md:block">
               Changu Changu Moto
             </h1>
-            <p className="text-primary-foreground/80 text-sm">
+            <h1 className="text-primary-foreground block text-xl font-semibold md:hidden">
+              CCM
+            </h1>
+            <p className="text-primary-foreground/80 hidden text-sm md:block">
               Providing a handup not a handout
             </p>
           </div>
         </div>
         {user && (
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
+            <SidebarHeaderTrigger />
             {result.error ? (
               <p className="text-red-500">
                 <AlertCircle />
