@@ -1,8 +1,7 @@
-import { StatCard } from "~/components/ui/stat-card";
-import { Users, Home, Flame, ClipboardCheck } from "lucide-react";
 import { createAdminClient } from "~/lib/services/supabase/server";
+import DashboardStatCardsClient from "./dashboard-stat-cards-client";
 
-interface DashboardStats {
+export interface DashboardStats {
   archivedHouseholds: number;
   activeHouseholds: number;
   totalStoves: number;
@@ -13,24 +12,30 @@ interface DashboardStats {
   inspectionsThisYear: number;
 }
 
-interface HouseholdStatsResult {
+export interface HouseholdStatsResult {
   archived_households: number;
   active_households: number;
 }
 
-interface StoveStatsResult {
+export interface StoveStatsResult {
   total_stoves: number;
   active_stoves: number;
 }
 
-interface StaffStatsResult {
+export interface StaffStatsResult {
   total_staff: number;
   active_staff: number;
 }
 
-interface InspectionStatsResult {
+export interface InspectionStatsResult {
   inspections_this_month: number;
   inspections_this_year: number;
+}
+
+export async function StatCardsWrapper({ year }: { year: string }) {
+  const stats = await getDashboardStats({ year });
+
+  return <DashboardStatCardsClient stats={stats} />;
 }
 
 async function getDashboardStats({
@@ -79,49 +84,4 @@ async function getDashboardStats({
     inspectionsThisMonth: Number(inspection.inspections_this_month),
     inspectionsThisYear: Number(inspection.inspections_this_year),
   };
-}
-
-export async function StatCardsWrapper({ year }: { year: string }) {
-  const stats = await getDashboardStats({ year });
-
-  const utilizationPercent =
-    stats.totalStoves > 0
-      ? ((stats.activeStoves / stats.totalStoves) * 100).toFixed(1)
-      : "0.0";
-
-  return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-      <StatCard
-        title="Archived Households"
-        value={stats.archivedHouseholds}
-        subtitle={`${stats.activeHouseholds.toLocaleString()} active`}
-        icon={Home}
-        color="ripple-green"
-      />
-
-      <StatCard
-        title="Active Stoves"
-        value={stats.activeStoves}
-        subtitle={`${utilizationPercent}% utilization`}
-        icon={Flame}
-        color="primary"
-      />
-
-      <StatCard
-        title="Active Staff"
-        value={stats.activeStaff}
-        subtitle={`${stats.totalStaff} total staff`}
-        icon={Users}
-        color="status-blue"
-      />
-
-      <StatCard
-        title="Inspections (Month)"
-        value={stats.inspectionsThisMonth}
-        subtitle={`${stats.inspectionsThisYear.toLocaleString()} this year`}
-        icon={ClipboardCheck}
-        color="action-mint"
-      />
-    </div>
-  );
 }
