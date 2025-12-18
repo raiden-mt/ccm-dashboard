@@ -14,10 +14,13 @@ export async function DashboardHeader() {
         <div className="flex items-center gap-4">
           <Image src="/logo.png" alt="CCM Logo" width={40} height={40} />
           <div>
-            <h1 className="text-primary-foreground text-xl font-semibold">
+            <h1 className="text-primary-foreground hidden text-xl font-semibold md:block">
               Changu Changu Moto
             </h1>
-            <p className="text-primary-foreground/80 text-sm">
+            <h1 className="text-primary-foreground block text-xl font-semibold md:hidden">
+              CCM
+            </h1>
+            <p className="text-primary-foreground/80 hidden text-sm md:block">
               Providing a handup not a handout
             </p>
           </div>
