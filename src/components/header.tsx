@@ -7,6 +7,8 @@ import { getCurrentUser } from "~/lib/services/supabase/lib/getCurrentUser";
 import { LogoutButton } from "~/lib/services/supabase/components/logout-button";
 import { SidebarHeaderTrigger } from "./sidebar-header-trigger";
 
+export const dynamic = "force-dynamic";
+
 export async function DashboardHeader() {
   const [result, user] = await Promise.all([getYears(), getCurrentUser()]);
 
