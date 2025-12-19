@@ -5,6 +5,8 @@ import { Geist } from "next/font/google";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { DashboardHeader } from "~/components/header";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "CCM Database Dashboard",
   description: "Changu Changu Moto - Reporting System",
