@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import YearSelector from "./year-selector";
 import { createAdminClient } from "~/lib/services/supabase/server";
 import { AlertCircle } from "lucide-react";
@@ -10,10 +11,12 @@ export async function DashboardHeader() {
   const [result, user] = await Promise.all([getYears(), getCurrentUser()]);
 
   return (
-    <header className="border-border bg-primary border-b">
+    <header className="border-border bg-primary h-[var(--header-height)] border-b">
       <div className="flex items-center justify-between px-6 py-4">
         <div className="flex items-center gap-4">
-          <Image src="/logo.png" alt="CCM Logo" width={40} height={40} />
+          <Link href="/">
+            <Image src="/logo.png" alt="CCM Logo" width={40} height={40} />
+          </Link>
           <div>
             <h1 className="text-primary-foreground hidden text-xl font-semibold md:block">
               Changu Changu Moto
