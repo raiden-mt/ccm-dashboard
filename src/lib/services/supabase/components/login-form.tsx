@@ -39,8 +39,7 @@ export function LoginForm({
         password,
       });
       if (error) throw error;
-      // `DashboardHeader` is a Server Component in a persistent layout; refresh the RSC tree
-      // so auth-dependent UI updates immediately without a full page reload.
+
       router.refresh();
       router.push("/");
     } catch (error: unknown) {
