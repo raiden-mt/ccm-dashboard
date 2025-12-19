@@ -11,7 +11,7 @@ export async function DashboardHeader() {
   const [result, user] = await Promise.all([getYears(), getCurrentUser()]);
 
   return (
-    <header className="border-border bg-primary border-b">
+    <header className="border-border bg-primary h-[var(--header-height)] border-b">
       <div className="flex items-center justify-between px-6 py-4">
         <div className="flex items-center gap-4">
           <Link href="/">
