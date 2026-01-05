@@ -1,6 +1,6 @@
 ## CCM Dashboard — Page Implementation Timeline (Starting 2026-01-05)
 
-This document proposes a **realistic, review-driven timeline** for implementing each dashboard page with **production (Supabase) data**, starting **Monday 2026-01-05**, assuming a **single developer** (Timothy Miamba) working **~6 hours/day**.
+This document proposes a **realistic, review-driven timeline** for implementing each dashboard page with **production (Supabase) data**, starting **Monday 2026-01-05**, assuming a **single developer** (Timothy Miamba) working **~8 hours/day**.
 
 ---
 
@@ -18,16 +18,21 @@ For a page to be considered implemented (v1), it should have:
 
 ### Roles & accountability
 
-- **Developer**: Timothy Miamba (single implementer)
-- **Accountable / Sponsor**: Data Systems Manager (final accountability)
-- **Pre-implementation approver**: Data Manager (reviews each page before build starts)
-- **Stakeholders**: Page-specific reviewers (operations, field teams, M&E, leadership) — reviewed after each page is implemented
+- **Responsible**: Timothy Miamba (Data Systems Developer) — single implementer
+- **Accountable**: Innocent Phiri (Data Systems Manager) — final accountability
+- **Consulted**:
+  - Nikki Khoram (Operations Manager, Project Sponsor & Director of Product)
+  - Mercy Khawula (CCM Project Manager)
+  - Some Investors (as needed)
+- **Informed**:
+  - Geoff Furber (Ripple Africa Founder and Director)
+  - Some Investors
 
 ---
 
 ### Known constraints and planning assumptions
 
-- **Capacity**: ~6h/day, ~5 workdays/week.
+- **Capacity**: ~8h/day, ~5 workdays/week.
 - **Focus factor (realistic)**: plan assumes ~15–25% time goes to meetings, reviews, context switching, and admin; the timeline already includes buffer for that.
 - **Field work**: developer is unavailable **1 week every month**. Dates vary; the schedule below assumes **one “no-delivery” week per month**, which can shift exact calendar dates.
 - **Unplanned work**: occasional support for other company projects can happen; plan includes buffer to avoid overpromising.
@@ -90,7 +95,7 @@ Dates are **targets** and assume:
 
 #### 1) Main / Overview (`/`)
 
-- **Target window**: 2026-01-05 → 2026-01-17
+- **Target window**: 2026-01-05 → 2026-01-16
 - **Effort (dev time)**: ~3–5 working days
 - **Review gates**:
   - **Stakeholder demos**: 2026-01-08 and 2026-01-12
@@ -100,7 +105,7 @@ Dates are **targets** and assume:
 
 #### 2) Inspections (`/inspections`)
 
-- **Target window**: 2026-01-13 → 2026-02-14
+- **Target window**: 2026-01-13 → 2026-02-13
 - **Effort (dev time)**: ~7–10 working days (plus revisions)
 - **Data Manager pre-review (Gate 1)**: week of 2026-01-13 (before deep implementation)
 - **Stakeholder review (Gate 2)**: late Jan / early Feb (after MVP demo)
@@ -110,7 +115,7 @@ Dates are **targets** and assume:
 
 #### 3) Households (`/households`)
 
-- **Target window**: 2026-02-10 → 2026-03-14
+- **Target window**: 2026-02-10 → 2026-03-13
 - **Effort (dev time)**: ~7–10 working days (plus revisions)
 - **Data Manager pre-review (Gate 1)**: during late Inspections build (to pipeline)
 - **Stakeholder review (Gate 2)**: early/mid March
@@ -120,7 +125,7 @@ Dates are **targets** and assume:
 
 #### 4) Coordinator Monthly Reports (`/coordinator-reports`)
 
-- **Target window**: 2026-03-10 → 2026-04-11
+- **Target window**: 2026-03-10 → 2026-04-10
 - **Effort (dev time)**: ~5–8 working days (plus revisions)
 - **Data Manager pre-review (Gate 1)**: early March
 - **Stakeholder review (Gate 2)**: late March / early April
@@ -129,7 +134,7 @@ Dates are **targets** and assume:
 
 #### 5) CV Performance (`/cv-performance`)
 
-- **Target window**: 2026-04-01 → 2026-05-03
+- **Target window**: 2026-04-01 → 2026-05-01
 - **Effort (dev time)**: ~5–8 working days (plus revisions)
 - **Data Manager pre-review (Gate 1)**: late March
 - **Stakeholder review (Gate 2)**: late April
@@ -138,7 +143,7 @@ Dates are **targets** and assume:
 
 #### 6) Staff (`/staff`)
 
-- **Target window**: 2026-04-22 → 2026-05-24
+- **Target window**: 2026-04-22 → 2026-05-22
 - **Effort (dev time)**: ~5–8 working days (plus revisions)
 - **Data Manager pre-review (Gate 1)**: early/mid April
 - **Stakeholder review (Gate 2)**: mid/late May
@@ -147,7 +152,7 @@ Dates are **targets** and assume:
 
 #### 7) Usage Surveys (`/usage-surveys`)
 
-- **Target window**: 2026-05-13 → 2026-06-21
+- **Target window**: 2026-05-13 → 2026-06-19
 - **Effort (dev time)**: ~6–9 working days (plus revisions)
 - **Data Manager pre-review (Gate 1)**: early May
 - **Stakeholder review (Gate 2)**: June
@@ -156,32 +161,17 @@ Dates are **targets** and assume:
 
 #### 8) Not Active (`/not-active`)
 
-- **Target window**: 2026-06-10 → 2026-07-05
+- **Target window**: 2026-06-10 → 2026-07-03
 - **Effort (dev time)**: ~3–5 working days (plus revisions)
 - **Notes**:
   - Depends on standardizing “not active” reasons + source-of-truth fields.
 
 #### 9) Archived (`/archived`)
 
-- **Target window**: 2026-06-24 → 2026-07-19
+- **Target window**: 2026-06-24 → 2026-07-17
 - **Effort (dev time)**: ~3–5 working days (plus revisions)
 - **Notes**:
   - Clarify restore behavior (UI-only vs true restore).
-
-#### 10) Data Extraction (`/data-extraction`) _(admin / controlled access recommended)_
-
-- **Target window**: 2026-07-08 → 2026-08-23
-- **Effort (dev time)**: ~8–12 working days (plus revisions)
-- **Notes**:
-  - Higher-risk page (large exports, performance, permissions).
-  - Likely needs an explicit access control decision (who can export what).
-
-#### 11) Local Authorities (`/local-authorities`) _(least privilege / lowest priority)_
-
-- **Target window**: 2026-08-05 → 2026-08-31
-- **Effort (dev time)**: ~2–4 working days (plus revisions)
-- **Notes**:
-  - “Least privilege” suggests it should be **restricted** (role-gated) and safe-by-default.
 
 ---
 
@@ -217,18 +207,6 @@ These are present as routes but treated as later-scope until the core pages stab
 
 ---
 
-### Suggested artefacts to visualise the timeline and tasks
-
-- **Gantt chart / Roadmap timeline** (Notion, Jira Advanced Roadmaps, Linear Roadmap, or Mermaid in docs)
-- **Kanban board** (Backlog → Ready (DM Approved) → In Progress → In Stakeholder Review → Done)
-- **Sprint plan + review notes** (biweekly doc capturing what was demoed + decisions)
-- **Stakeholder feedback log** (date, page, request, priority, status, decision)
-- **Data dictionary / metric definitions** (single source of truth for filters and KPI formulas)
-- **RACI matrix** per page (who approves, who is consulted, who is informed)
-- **Release checklist** per page (permissions, performance checks, export safety, UX review)
-
----
-
 ### Optional: Mermaid Gantt snippet (copy into a Mermaid-enabled viewer)
 
 ```mermaid
@@ -238,15 +216,15 @@ gantt
   excludes    weekends
 
   section January (reviews + overview)
-  Overview v1                     :active, 2026-01-05, 12d
+  Overview v1                     :active, 2026-01-05, 11d
   Stakeholder review #1 (demo)     :milestone, 2026-01-08, 0d
   Stakeholder review #2 (demo)     :milestone, 2026-01-12, 0d
 
   section Core pages
-  Inspections (MVP → v1)           :2026-01-13, 32d
-  Households (MVP → v1)            :2026-02-10, 32d
-  Coordinator Reports (MVP → v1)   :2026-03-10, 32d
-  CV Performance (MVP → v1)        :2026-04-01, 32d
-  Staff (MVP → v1)                 :2026-04-22, 32d
-  Usage Surveys (MVP → v1)         :2026-05-13, 40d
+  Inspections (MVP → v1)           :2026-01-13, 31d
+  Households (MVP → v1)            :2026-02-10, 31d
+  Coordinator Reports (MVP → v1)   :2026-03-10, 31d
+  CV Performance (MVP → v1)        :2026-04-01, 30d
+  Staff (MVP → v1)                 :2026-04-22, 30d
+  Usage Surveys (MVP → v1)         :2026-05-13, 37d
 ```

@@ -1,9 +1,24 @@
 # CCM Dashboard — Linear Roadmap
 
 **Project Start Date**: 2026-01-05  
-**Project Owner**: Timothy Miamba  
-**Project Sponsor**: Data Systems Manager  
-**Estimated Completion**: 2026-08-31 (core pages)
+**Project Owner**: Timothy Miamba (Data Systems Developer)  
+**Project Sponsor**: Nikki Khoram (Operations Manager & Director of Product)  
+**Accountable**: Innocent Phiri (Data Systems Manager)  
+**Estimated Completion**: 2026-07-17 (core pages)
+
+---
+
+## Roles & Accountability
+
+- **Responsible**: Timothy Miamba (Data Systems Developer) — single implementer
+- **Accountable**: Innocent Phiri (Data Systems Manager) — final accountability
+- **Consulted**:
+  - Nikki Khoram (Operations Manager, Project Sponsor & Director of Product)
+  - Mercy Khawula (CCM Project Manager)
+  - Some Investors (as needed)
+- **Informed**:
+  - Geoff Furber (Ripple Africa Founder and Director)
+  - Some Investors
 
 ---
 
@@ -13,18 +28,17 @@
 Build a production-ready CCM Dashboard with all core pages connected to live Supabase data, replacing mock data implementations with real database queries and ensuring stakeholder acceptance through iterative review cycles.
 
 ### Success Criteria
-- ✅ All 11 core pages implemented with live Supabase data
+- ✅ All 9 core pages implemented with live Supabase data
 - ✅ Data Manager approval obtained before each page build
 - ✅ Stakeholder acceptance achieved for each page
 - ✅ Consistent UX patterns established (filters, exports, project summary access)
-- ✅ Performance and access control validated for data extraction features
 
 ---
 
 ## Project Milestones
 
 ### Milestone 1: Overview Page Completion
-**Target Date**: 2026-01-17  
+**Target Date**: 2026-01-16  
 **Status**: In Progress  
 **Dependencies**: None
 
@@ -36,12 +50,12 @@ Build a production-ready CCM Dashboard with all core pages connected to live Sup
 **Key Dates**:
 - 2026-01-08: Stakeholder review #1 (demo)
 - 2026-01-12: Stakeholder review #2 (demo + data walkthrough)
-- 2026-01-17: Final acceptance
+- 2026-01-16: Final acceptance
 
 ---
 
 ### Milestone 2: Inspections Page
-**Target Date**: 2026-02-14  
+**Target Date**: 2026-02-13  
 **Status**: Not Started  
 **Dependencies**: Milestone 1
 
@@ -54,13 +68,13 @@ Build a production-ready CCM Dashboard with all core pages connected to live Sup
 
 **Key Dates**:
 - 2026-01-13: Data Manager pre-review (Gate 1)
-- 2026-02-07: MVP demo to stakeholders
-- 2026-02-14: Final acceptance
+- 2026-02-06: MVP demo to stakeholders
+- 2026-02-13: Final acceptance
 
 ---
 
 ### Milestone 3: Households Page
-**Target Date**: 2026-03-14  
+**Target Date**: 2026-03-13  
 **Status**: Not Started  
 **Dependencies**: Milestone 2
 
@@ -73,13 +87,13 @@ Build a production-ready CCM Dashboard with all core pages connected to live Sup
 
 **Key Dates**:
 - 2026-02-10: Data Manager pre-review (Gate 1)
-- 2026-03-07: MVP demo to stakeholders
-- 2026-03-14: Final acceptance
+- 2026-03-06: MVP demo to stakeholders
+- 2026-03-13: Final acceptance
 
 ---
 
 ### Milestone 4: Coordinator Monthly Reports
-**Target Date**: 2026-04-11  
+**Target Date**: 2026-04-10  
 **Status**: Not Started  
 **Dependencies**: Milestone 3
 
@@ -92,13 +106,13 @@ Build a production-ready CCM Dashboard with all core pages connected to live Sup
 
 **Key Dates**:
 - 2026-03-10: Data Manager pre-review (Gate 1)
-- 2026-04-04: MVP demo to stakeholders
-- 2026-04-11: Final acceptance
+- 2026-04-03: MVP demo to stakeholders
+- 2026-04-10: Final acceptance
 
 ---
 
 ### Milestone 5: CV Performance Page
-**Target Date**: 2026-05-03  
+**Target Date**: 2026-05-01  
 **Status**: Not Started  
 **Dependencies**: Milestone 4
 
@@ -111,13 +125,13 @@ Build a production-ready CCM Dashboard with all core pages connected to live Sup
 
 **Key Dates**:
 - 2026-04-01: Data Manager pre-review (Gate 1)
-- 2026-04-26: MVP demo to stakeholders
-- 2026-05-03: Final acceptance
+- 2026-04-24: MVP demo to stakeholders
+- 2026-05-01: Final acceptance
 
 ---
 
 ### Milestone 6: Staff Page
-**Target Date**: 2026-05-24  
+**Target Date**: 2026-05-22  
 **Status**: Not Started  
 **Dependencies**: Milestone 5
 
@@ -130,13 +144,13 @@ Build a production-ready CCM Dashboard with all core pages connected to live Sup
 
 **Key Dates**:
 - 2026-04-22: Data Manager pre-review (Gate 1)
-- 2026-05-17: MVP demo to stakeholders
-- 2026-05-24: Final acceptance
+- 2026-05-15: MVP demo to stakeholders
+- 2026-05-22: Final acceptance
 
 ---
 
 ### Milestone 7: Usage Surveys Page
-**Target Date**: 2026-06-21  
+**Target Date**: 2026-06-19  
 **Status**: Not Started  
 **Dependencies**: Milestone 6
 
@@ -149,13 +163,13 @@ Build a production-ready CCM Dashboard with all core pages connected to live Sup
 
 **Key Dates**:
 - 2026-05-13: Data Manager pre-review (Gate 1)
-- 2026-06-14: MVP demo to stakeholders
-- 2026-06-21: Final acceptance
+- 2026-06-12: MVP demo to stakeholders
+- 2026-06-19: Final acceptance
 
 ---
 
 ### Milestone 8: Not Active Page
-**Target Date**: 2026-07-05  
+**Target Date**: 2026-07-03  
 **Status**: Not Started  
 **Dependencies**: Milestone 7
 
@@ -167,13 +181,13 @@ Build a production-ready CCM Dashboard with all core pages connected to live Sup
 
 **Key Dates**:
 - 2026-06-10: Data Manager pre-review (Gate 1)
-- 2026-06-28: MVP demo to stakeholders
-- 2026-07-05: Final acceptance
+- 2026-06-26: MVP demo to stakeholders
+- 2026-07-03: Final acceptance
 
 ---
 
 ### Milestone 9: Archived Page
-**Target Date**: 2026-07-19  
+**Target Date**: 2026-07-17  
 **Status**: Not Started  
 **Dependencies**: Milestone 8
 
@@ -185,47 +199,8 @@ Build a production-ready CCM Dashboard with all core pages connected to live Sup
 
 **Key Dates**:
 - 2026-06-24: Data Manager pre-review (Gate 1)
-- 2026-07-12: MVP demo to stakeholders
-- 2026-07-19: Final acceptance
-
----
-
-### Milestone 10: Data Extraction Page
-**Target Date**: 2026-08-23  
-**Status**: Not Started  
-**Dependencies**: Milestone 9
-
-**Deliverables**:
-- Multi-dataset export functionality
-- Field selection UI
-- Export format options (CSV, Excel, JSON)
-- Access control implementation
-- Performance optimization
-- Stakeholder acceptance
-
-**Key Dates**:
-- 2026-07-08: Data Manager pre-review (Gate 1)
-- 2026-08-16: MVP demo to stakeholders
-- 2026-08-23: Final acceptance
-
----
-
-### Milestone 11: Local Authorities Page
-**Target Date**: 2026-08-31  
-**Status**: Not Started  
-**Dependencies**: Milestone 10
-
-**Deliverables**:
-- Local authority data from database
-- CCM count aggregation
-- Filter and export functionality
-- Access control (least privilege)
-- Stakeholder acceptance
-
-**Key Dates**:
-- 2026-08-05: Data Manager pre-review (Gate 1)
-- 2026-08-26: MVP demo to stakeholders
-- 2026-08-31: Final acceptance
+- 2026-07-10: MVP demo to stakeholders
+- 2026-07-17: Final acceptance
 
 ---
 
@@ -952,213 +927,6 @@ Build a production-ready CCM Dashboard with all core pages connected to live Sup
 
 ---
 
-### Milestone 10: Data Extraction Page
-
-#### Task 10.1: Data Manager Pre-Review
-**Assignee**: Data Manager  
-**Priority**: High  
-**Status**: To Do  
-**Estimate**: 3h
-
-**Description**:
-- Review export requirements per dataset
-- Define access control rules (who can export what)
-- Approve field selection options
-- Sign off on export format requirements
-
-**Acceptance Criteria**:
-- Data Manager approval obtained
-- Access control defined
-- Export requirements documented
-
----
-
-#### Task 10.2: Implement Access Control
-**Assignee**: Timothy Miamba  
-**Priority**: High  
-**Status**: To Do  
-**Estimate**: 6h
-
-**Description**:
-- Implement role-based access control
-- Create permission checks for exports
-- Secure export endpoints
-- Add audit logging
-
-**Acceptance Criteria**:
-- Access control working
-- Permissions enforced
-- Audit trail in place
-
----
-
-#### Task 10.3: Create Multi-Dataset Export System
-**Assignee**: Timothy Miamba  
-**Priority**: High  
-**Status**: To Do  
-**Estimate**: 12h
-
-**Description**:
-- Create export API endpoints for each dataset
-- Implement field selection logic
-- Support CSV, Excel, JSON formats
-- Optimize for large exports
-- Add progress indicators
-
-**Acceptance Criteria**:
-- All datasets exportable
-- Field selection working
-- All formats supported
-- Performance acceptable for large exports
-
----
-
-#### Task 10.4: Implement Export Presets
-**Assignee**: Timothy Miamba  
-**Priority**: Medium  
-**Status**: To Do  
-**Estimate**: 4h
-
-**Description**:
-- Create quick export preset configurations
-- Implement preset selection UI
-- Save common export configurations
-
-**Acceptance Criteria**:
-- Presets working
-- UI intuitive
-- Configurations saved
-
----
-
-#### Task 10.5: Performance Optimization
-**Assignee**: Timothy Miamba  
-**Priority**: High  
-**Status**: To Do  
-**Estimate**: 6h
-
-**Description**:
-- Optimize export queries
-- Implement pagination/chunking for large exports
-- Add timeout handling
-- Test with realistic data volumes
-
-**Acceptance Criteria**:
-- Exports performant
-- Large exports handled gracefully
-- No timeouts on reasonable datasets
-
----
-
-#### Task 10.6: Stakeholder Review & Iteration
-**Assignee**: Timothy Miamba  
-**Priority**: High  
-**Status**: To Do  
-**Estimate**: 14h
-
-**Description**:
-- Demo MVP to stakeholders
-- Capture feedback
-- Implement changes
-- Security review
-
-**Acceptance Criteria**:
-- Stakeholder approval obtained
-- Security validated
-- Page marked as complete
-
----
-
-### Milestone 11: Local Authorities Page
-
-#### Task 11.1: Data Manager Pre-Review
-**Assignee**: Data Manager  
-**Priority**: High  
-**Status**: To Do  
-**Estimate**: 2h
-
-**Description**:
-- Review local authority data structure
-- Confirm CCM count aggregation logic
-- Approve access restrictions (least privilege)
-- Sign off on display requirements
-
-**Acceptance Criteria**:
-- Data Manager approval obtained
-- Access control defined
-- Requirements documented
-
----
-
-#### Task 11.2: Implement Access Control
-**Assignee**: Timothy Miamba  
-**Priority**: High  
-**Status**: To Do  
-**Estimate**: 3h
-
-**Description**:
-- Implement role-based access restrictions
-- Create permission checks
-- Ensure safe-by-default behavior
-
-**Acceptance Criteria**:
-- Access control working
-- Restrictions enforced
-- Safe defaults in place
-
----
-
-#### Task 11.3: Create Supabase Queries
-**Assignee**: Timothy Miamba  
-**Priority**: High  
-**Status**: To Do  
-**Estimate**: 4h
-
-**Description**:
-- Replace mock data with Supabase queries
-- Create CCM count aggregation queries
-- Implement filtering by district/VPA
-
-**Acceptance Criteria**:
-- All data from Supabase
-- Aggregations correct
-- Performance acceptable
-
----
-
-#### Task 11.4: Implement Filters & Export
-**Assignee**: Timothy Miamba  
-**Priority**: Medium  
-**Status**: To Do  
-**Estimate**: 3h
-
-**Description**:
-- Connect filters to queries
-- Implement export functionality
-
-**Acceptance Criteria**:
-- Filters working
-- Export functional
-
----
-
-#### Task 11.5: Stakeholder Review & Iteration
-**Assignee**: Timothy Miamba  
-**Priority**: High  
-**Status**: To Do  
-**Estimate**: 8h
-
-**Description**:
-- Demo MVP to stakeholders
-- Capture feedback
-- Implement changes
-
-**Acceptance Criteria**:
-- Stakeholder approval obtained
-- Page marked as complete
-
----
-
 ## Labels & Status
 
 ### Priority Labels
@@ -1195,8 +963,6 @@ Milestone 1 (Overview)
                       └─> Milestone 7 (Usage Surveys)
                           └─> Milestone 8 (Not Active)
                               └─> Milestone 9 (Archived)
-                                  └─> Milestone 10 (Data Extraction)
-                                      └─> Milestone 11 (Local Authorities)
 ```
 
 **Note**: While milestones are sequential, some tasks can be pipelined (e.g., Data Manager pre-review for next page while current page is in stakeholder review).
@@ -1271,7 +1037,7 @@ Milestone 1 (Overview)
 
 1. **Create Project**: "CCM Dashboard Implementation"
 2. **Set Start Date**: 2026-01-05
-3. **Create Milestones**: Use the 11 milestones defined above
+3. **Create Milestones**: Use the 9 milestones defined above
 4. **Create Labels**: Use the labels defined in "Labels & Status" section
 5. **Create Issues**: Convert each task into a Linear issue
 6. **Set Dependencies**: Link issues based on dependencies graph
