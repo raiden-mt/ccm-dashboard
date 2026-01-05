@@ -25,18 +25,17 @@ export default async function DashboardPage({ searchParams }: PageProps) {
   return (
     <div className="bg-background p-2 md:p-4">
       <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-foreground text-2xl font-semibold">
-              Dashboard Overview
-            </h2>
-            <p className="text-muted-foreground hidden md:block">
-              Complete overview of CCM database operations
-            </p>
-          </div>
-
-          <ProjectSummaryWrapper year={year} />
+        <div>
+          <h2 className="text-foreground text-2xl font-semibold">
+            Dashboard Overview
+          </h2>
+          <p className="text-muted-foreground hidden md:block">
+            Complete overview of CCM database operations
+          </p>
         </div>
+
+        {/* Project Summary Stats - Inline */}
+        <ProjectSummaryWrapper year={year} variant="inline" />
 
         {/* Key Metrics */}
         <StatCardsWrapper year={String(year)} />
