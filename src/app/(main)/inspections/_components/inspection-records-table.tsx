@@ -18,18 +18,7 @@ import {
 } from "~/components/ui/table";
 import { inspections, staff, householders } from "~/lib/mock-data";
 
-interface InspectionRecordsTableProps {
-  filters?: {
-    dateFrom: string;
-    dateTo: string;
-    vpaFilter: string;
-    conditionFilter: string;
-  };
-}
-
-export function InspectionRecordsTable({
-  filters,
-}: InspectionRecordsTableProps) {
+export function InspectionRecordsTable() {
   const getStaffName = (id: string) =>
     staff.find((s) => s.id === id)?.name ?? "Unknown";
 
@@ -38,21 +27,13 @@ export function InspectionRecordsTable({
     return hh ? `${hh.firstName} ${hh.lastName}` : "Unknown";
   };
 
-  const filteredInspections = inspections.filter((i) => {
-    if (filters?.conditionFilter && filters.conditionFilter !== "all" && i.ccmCondition !== filters.conditionFilter)
-      return false;
-    if (filters?.dateFrom && i.inspectionDate < filters.dateFrom) return false;
-    if (filters?.dateTo && i.inspectionDate > filters.dateTo) return false;
-    return true;
-  });
-
   return (
     <Card>
       <CardHeader>
         <CardTitle>Inspection Records</CardTitle>
         <CardDescription>
-          Showing {Math.min(filteredInspections.length, 15)} of{" "}
-          {filteredInspections.length} inspections
+          Showing {Math.min(inspections.length, 15)} of {inspections.length}{" "}
+          inspections
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -60,7 +41,7 @@ export function InspectionRecordsTable({
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="sticky left-0 z-10 bg-background">
+                <TableHead className="bg-background sticky left-0 z-10">
                   Householder
                 </TableHead>
                 <TableHead>Date</TableHead>
@@ -76,9 +57,9 @@ export function InspectionRecordsTable({
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredInspections.slice(0, 15).map((i) => (
+              {inspections.slice(0, 15).map((i) => (
                 <TableRow key={i.id}>
-                  <TableCell className="sticky left-0 z-10 bg-background font-medium whitespace-nowrap">
+                  <TableCell className="bg-background sticky left-0 z-10 font-medium whitespace-nowrap">
                     {getHouseholderName(i.householderId)}
                   </TableCell>
                   <TableCell className="whitespace-nowrap">
@@ -164,4 +145,3 @@ export function InspectionRecordsTable({
     </Card>
   );
 }
-

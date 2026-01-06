@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import {
   Card,
   CardContent,
@@ -21,20 +20,22 @@ import {
 import { Filter, Download } from "lucide-react";
 import { vpaAreas } from "~/lib/mock-data";
 
-interface InspectionFiltersProps {
-  onFiltersChange?: (filters: {
-    dateFrom: string;
-    dateTo: string;
-    vpaFilter: string;
-    conditionFilter: string;
-  }) => void;
-}
+import { parseAsIsoDate, parseAsString, useQueryState } from "nuqs";
 
-export function InspectionFilters({ onFiltersChange }: InspectionFiltersProps) {
-  const [dateFrom, setDateFrom] = useState<string>("");
-  const [dateTo, setDateTo] = useState<string>("");
-  const [vpaFilter, setVpaFilter] = useState<string>("all");
-  const [conditionFilter, setConditionFilter] = useState<string>("all");
+export function InspectionFilters() {
+  const [dateFrom, setDateFrom] = useQueryState(
+    "inspectionDateFrom",
+    parseAsIsoDate,
+  );
+  const [dateTo, setDateTo] = useQueryState("inspectionDateTo", parseAsIsoDate);
+  const [vpaFilter, setVpaFilter] = useQueryState(
+    "inspectionVpa",
+    parseAsString.withDefault("all"),
+  );
+  const [conditionFilter, setConditionFilter] = useQueryState(
+    "inspectionStoveCondition",
+    parseAsString.withDefault("all"),
+  );
 
   const handleDateFromChange = (value: string) => {
     setDateFrom(value);
@@ -106,7 +107,10 @@ export function InspectionFilters({ onFiltersChange }: InspectionFiltersProps) {
 
           <div className="space-y-2">
             <Label>Stove Condition</Label>
-            <Select value={conditionFilter} onValueChange={handleConditionChange}>
+            <Select
+              value={conditionFilter}
+              onValueChange={handleConditionChange}
+            >
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
@@ -131,4 +135,3 @@ export function InspectionFilters({ onFiltersChange }: InspectionFiltersProps) {
     </Card>
   );
 }
-
