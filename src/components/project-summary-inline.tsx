@@ -1,15 +1,6 @@
 "use client";
 
-import { Button } from "~/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "~/components/ui/dialog";
-import { Eye } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { useRealtimeProjectSummary } from "~/hooks/use-realtime-project-summary";
 import {
   getSummaryItems,
@@ -17,7 +8,7 @@ import {
   type ProjectSummaryData,
 } from "./project-summary-stats";
 
-export function ProjectSummaryRealtime({
+export function ProjectSummaryInline({
   ccmsBuiltCount: initialCCMsBuiltCount,
   ccmsInUseCount: initialCCMsInUseCount,
   conditionGoodCount: initialConditionGoodCount,
@@ -53,23 +44,21 @@ export function ProjectSummaryRealtime({
   const summaryItems = getSummaryItems(data);
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button className="flex items-center gap-2">
-          <Eye className="hidden h-4 w-4 sm:block" />
-          <span className="sm:hidden">View Summary</span>
-          <span className="hidden sm:inline">View Project Summary</span>
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-3xl lg:max-w-5xl">
-        <DialogHeader className="pb-2">
-          <DialogTitle>CCM Project Summary</DialogTitle>
-          <DialogDescription>
-            Realtime snapshot of project metrics for the selected year.
-          </DialogDescription>
-        </DialogHeader>
-        <ProjectSummaryStatsGrid items={summaryItems} />
-      </DialogContent>
-    </Dialog>
+    <Card className="gap-2">
+      <CardHeader className="py-0">
+        <CardTitle className="text-lg font-semibold">
+          CCM Project Summary
+        </CardTitle>
+        {/* <p className="text-muted-foreground text-sm">
+          Realtime snapshot of project metrics for the selected year.
+        </p> */}
+      </CardHeader>
+      <CardContent className="py-0">
+        <ProjectSummaryStatsGrid
+          items={summaryItems}
+          className="grid grid-cols-3 gap-3 sm:grid-cols-5 lg:grid-cols-9"
+        />
+      </CardContent>
+    </Card>
   );
 }

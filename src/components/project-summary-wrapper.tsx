@@ -1,7 +1,16 @@
 import { createAdminClient } from "~/lib/services/supabase/server";
 import { ProjectSummaryRealtime } from "./project-summary-realtime";
+import { ProjectSummaryInline } from "./project-summary-inline";
 
-export async function ProjectSummaryWrapper({ year }: { year: number }) {
+export type ProjectSummaryVariant = "dialog" | "inline";
+
+export async function ProjectSummaryWrapper({
+  year,
+  variant = "dialog",
+}: {
+  year: number;
+  variant?: ProjectSummaryVariant;
+}) {
   const [
     ccmsBuiltResult,
     ccmsInUseResult,
@@ -38,19 +47,23 @@ export async function ProjectSummaryWrapper({ year }: { year: number }) {
     return <div>Error loading project summary</div>;
   }
 
-  return (
-    <ProjectSummaryRealtime
-      ccmsBuiltCount={ccmsBuiltResult.total}
-      ccmsInUseCount={ccmsInUseResult.total}
-      conditionGoodCount={conditionGoodResult.count}
-      kitchensCount={kitchensResult.total}
-      wellVentilatedCount={wellVentilatedResult.total}
-      rainProtectedCount={rainProtectedResult.total}
-      inspected0to3MonthsCount={inspected0to3MonthsResult.count}
-      inspected3to6MonthsCount={inspected3to6MonthsResult.count}
-      inspectedOver6MonthsCount={inspectedOver6MonthsResult.count}
-    />
-  );
+  const props = {
+    ccmsBuiltCount: ccmsBuiltResult.total,
+    ccmsInUseCount: ccmsInUseResult.total,
+    conditionGoodCount: conditionGoodResult.count,
+    kitchensCount: kitchensResult.total,
+    wellVentilatedCount: wellVentilatedResult.total,
+    rainProtectedCount: rainProtectedResult.total,
+    inspected0to3MonthsCount: inspected0to3MonthsResult.count,
+    inspected3to6MonthsCount: inspected3to6MonthsResult.count,
+    inspectedOver6MonthsCount: inspectedOver6MonthsResult.count,
+  };
+
+  if (variant === "inline") {
+    return <ProjectSummaryInline {...props} />;
+  }
+
+  return <ProjectSummaryRealtime {...props} />;
 }
 
 async function getTotalCCMsBuilt({
