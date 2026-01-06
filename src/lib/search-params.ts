@@ -10,7 +10,9 @@ export const yearSearchParams = {
   year: parseAsInteger.withDefault(2025),
 
   // Inspection search params
-  inspectionDateFrom: parseAsIsoDate,
+  inspectionDateFrom: parseAsIsoDate.withDefault(
+    new Date(new Date().getFullYear(), 0, 1),
+  ),
   inspectionDateTo: parseAsIsoDate.withDefault(new Date()),
   inspectionVpa: parseAsString.withDefault("all"),
   inspectionStoveCondition: parseAsString.withDefault("all"),
