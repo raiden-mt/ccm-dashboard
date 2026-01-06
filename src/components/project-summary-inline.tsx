@@ -44,16 +44,16 @@ export function ProjectSummaryInline({
   const summaryItems = getSummaryItems(data);
 
   return (
-    <Card>
-      <CardHeader className="pb-3">
+    <Card className="gap-2">
+      <CardHeader className="py-0">
         <CardTitle className="text-lg font-semibold">
           CCM Project Summary
         </CardTitle>
-        <p className="text-muted-foreground text-sm">
+        {/* <p className="text-muted-foreground text-sm">
           Realtime snapshot of project metrics for the selected year.
-        </p>
+        </p> */}
       </CardHeader>
-      <CardContent>
+      <CardContent className="py-0">
         <ProjectSummaryStatsGrid
           items={summaryItems}
           className="grid grid-cols-3 gap-3 sm:grid-cols-5 lg:grid-cols-9"
