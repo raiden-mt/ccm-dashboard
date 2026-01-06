@@ -290,8 +290,10 @@ export function InspectionsSection() {
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead className="sticky left-0 z-10 bg-background">
+                    Householder
+                  </TableHead>
                   <TableHead>Date</TableHead>
-                  <TableHead>Householder</TableHead>
                   <TableHead>Inspector</TableHead>
                   <TableHead>Chief</TableHead>
                   <TableHead>Lead CV</TableHead>
@@ -306,11 +308,11 @@ export function InspectionsSection() {
               <TableBody>
                 {filteredInspections.slice(0, 15).map((i) => (
                   <TableRow key={i.id}>
+                    <TableCell className="sticky left-0 z-10 bg-background font-medium whitespace-nowrap">
+                      {getHouseholderName(i.householderId)}
+                    </TableCell>
                     <TableCell className="whitespace-nowrap">
                       {i.inspectionDate}
-                    </TableCell>
-                    <TableCell className="font-medium whitespace-nowrap">
-                      {getHouseholderName(i.householderId)}
                     </TableCell>
                     <TableCell className="whitespace-nowrap">
                       {getStaffName(i.staffId)}
