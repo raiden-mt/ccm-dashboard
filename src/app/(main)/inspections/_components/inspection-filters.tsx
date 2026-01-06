@@ -7,9 +7,16 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
+
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "~/components/ui/popover";
+
 import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
+import { Calendar } from "~/components/ui/calendar";
 import {
   Select,
   SelectContent,
@@ -17,17 +24,32 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { Filter, Download } from "lucide-react";
+import { Filter, Download, ChevronDownIcon } from "lucide-react";
 import { vpaAreas } from "~/lib/mock-data";
 
 import { parseAsIsoDate, parseAsString, useQueryState } from "nuqs";
+import { useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { loadSearchParams } from "~/lib/search-params";
 
 export function InspectionFilters() {
+  const searchParams = useSearchParams();
+  const { year } = loadSearchParams(searchParams);
+  const startOfYear = new Date(year, 0, 1);
+  const endOfYear = new Date(year, 11, 31);
+
+  const [dateFromOpen, setDateFromOpen] = useState(false);
   const [dateFrom, setDateFrom] = useQueryState(
     "inspectionDateFrom",
-    parseAsIsoDate,
+    parseAsIsoDate.withDefault(new Date(year, 0, 1)),
   );
-  const [dateTo, setDateTo] = useQueryState("inspectionDateTo", parseAsIsoDate);
+
+  const [dateToOpen, setDateToOpen] = useState(false);
+  const [dateTo, setDateTo] = useQueryState(
+    "inspectionDateTo",
+    parseAsIsoDate.withDefault(new Date(year, 11, 31)),
+  );
+
   const [vpaFilter, setVpaFilter] = useQueryState(
     "inspectionVpa",
     parseAsString.withDefault("all"),
@@ -36,16 +58,6 @@ export function InspectionFilters() {
     "inspectionStoveCondition",
     parseAsString.withDefault("all"),
   );
-
-  const handleDateFromChange = (value: string) => {
-    setDateFrom(value);
-    onFiltersChange?.({ dateFrom: value, dateTo, vpaFilter, conditionFilter });
-  };
-
-  const handleDateToChange = (value: string) => {
-    setDateTo(value);
-    onFiltersChange?.({ dateFrom, dateTo: value, vpaFilter, conditionFilter });
-  };
 
   const handleVpaChange = (value: string) => {
     setVpaFilter(value);
@@ -72,20 +84,66 @@ export function InspectionFilters() {
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
           <div className="space-y-2">
             <Label>Date From</Label>
-            <Input
-              type="date"
-              value={dateFrom}
-              onChange={(e) => handleDateFromChange(e.target.value)}
-            />
+            <Popover open={dateFromOpen} onOpenChange={setDateFromOpen}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  id="date-from-button"
+                  className="w-48 justify-between font-normal"
+                >
+                  {dateFrom ? dateFrom.toLocaleDateString() : "Select date"}
+                  <ChevronDownIcon />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent
+                className="w-auto overflow-hidden p-0"
+                align="start"
+              >
+                <Calendar
+                  mode="single"
+                  selected={dateFrom}
+                  defaultMonth={dateFrom ?? startOfYear}
+                  disabled={[{ before: startOfYear }, { after: endOfYear }]}
+                  onSelect={(date) => {
+                    void setDateFrom(date ?? startOfYear);
+                    setDateFromOpen(false);
+                  }}
+                  className="rounded-md border"
+                />
+              </PopoverContent>
+            </Popover>
           </div>
 
           <div className="space-y-2">
             <Label>Date To</Label>
-            <Input
-              type="date"
-              value={dateTo}
-              onChange={(e) => handleDateToChange(e.target.value)}
-            />
+            <Popover open={dateToOpen} onOpenChange={setDateToOpen}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  id="date-from-button"
+                  className="w-48 justify-between font-normal"
+                >
+                  {dateTo ? dateTo.toLocaleDateString() : "Select date"}
+                  <ChevronDownIcon />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent
+                className="w-auto overflow-hidden p-0"
+                align="start"
+              >
+                <Calendar
+                  mode="single"
+                  selected={dateTo}
+                  disabled={[{ before: startOfYear }, { after: endOfYear }]}
+                  onSelect={(date) => {
+                    void setDateTo(date ?? endOfYear);
+                    setDateToOpen(false);
+                  }}
+                  defaultMonth={dateTo ?? endOfYear}
+                  className="rounded-md border"
+                />
+              </PopoverContent>
+            </Popover>
           </div>
 
           <div className="space-y-2">
