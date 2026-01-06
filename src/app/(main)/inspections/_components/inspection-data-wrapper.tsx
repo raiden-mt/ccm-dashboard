@@ -1,10 +1,17 @@
 import { createAdminClient } from "~/lib/services/supabase/server";
 import { InspectionDataClient } from "./inspection-data-client";
+import { InspectionDataErrorState } from "./inspection-data-error-state";
 
 export async function InspectionDataWrapper() {
   const { data: filterNames, error: filterNamesError } = await getFilterNames();
   if (filterNamesError || !filterNames) {
-    return <div>Error fetching filter names</div>;
+    return (
+      <InspectionDataErrorState
+        title="Unable to load inspection filters"
+        description="We couldn’t fetch the filter options needed to request inspection data."
+        error={filterNamesError ?? "No filter options were returned."}
+      />
+    );
   }
 
   return <InspectionDataClient {...filterNames} />;
