@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { getCurrentUser } from "~/lib/services/supabase/lib/getCurrentUser";
 import { InspectionStatCards } from "./_components/inspection-stat-cards";
 import { InspectionTrendsChart } from "./_components/inspection-trends-chart";
-import { InspectionDataSection } from "./_components/inspection-data-section";
+import { InspectionDataWrapper } from "./_components/inspection-data-wrapper";
 
 export default async function InspectionsPage() {
   const user = await getCurrentUser();
@@ -31,7 +31,7 @@ export default async function InspectionsPage() {
         <InspectionTrendsChart />
 
         {/* Filters & Table */}
-        <InspectionDataSection />
+        <InspectionDataWrapper />
       </div>
     </div>
   );

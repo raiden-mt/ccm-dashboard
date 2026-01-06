@@ -11,7 +11,7 @@ interface Filters {
   conditionFilter: string;
 }
 
-export function InspectionDataSection() {
+export function InspectionDataClient() {
   const [filters, setFilters] = useState<Filters>({
     dateFrom: "",
     dateTo: "",
@@ -26,4 +26,3 @@ export function InspectionDataSection() {
     </>
   );
 }
-
