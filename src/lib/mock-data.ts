@@ -123,6 +123,8 @@ export interface Householder {
   inspectionStatus: InspectionStatus;
 }
 
+export type WoodUseQuality = "good" | "fair" | "poor";
+
 export interface Inspection {
   id: string;
   householderId: string;
@@ -131,6 +133,7 @@ export interface Inspection {
   ccmInUse: boolean;
   ccmCondition: CCMCondition;
   woodUse: boolean;
+  woodUseQuality: WoodUseQuality;
   hasKitchen: boolean;
   kitchenWellVentilated: boolean;
   kitchenRainproof: boolean;
@@ -138,7 +141,9 @@ export interface Inspection {
   latitude?: number;
   longitude?: number;
   gpsAccuracy?: number;
-  result: "pass" | "needs_attention" | "fail";
+  // Related entity names (denormalized for display)
+  chiefName: string;
+  leadCvName: string;
 }
 
 export interface UsageSurvey {
@@ -798,10 +803,34 @@ const generateHouseholders = (): Householder[] => {
 
 export const householders = generateHouseholders();
 
+// Mock chief names
+const chiefNames = [
+  "Chief Mwase",
+  "Chief Tembo",
+  "Chief Phiri",
+  "Chief Banda",
+  "Chief Nyirenda",
+  "Chief Gondwe",
+  "Chief Kumwenda",
+  "Chief Mhango",
+];
+
+// Mock lead CV names (from staff with lead_community_volunteer position)
+const leadCvNames = [
+  "Chimwemwe Kumwenda",
+  "Daud Mpofu",
+  "Aaron Moyo",
+  "Saleji Nkosi",
+  "Bettie Mhango",
+  "Beuty Hara",
+];
+
 // Generate inspections
 const generateInspections = (): Inspection[] => {
   const inspections: Inspection[] = [];
   let inspId = 1;
+
+  const woodUseQualities: WoodUseQuality[] = ["good", "fair", "poor"];
 
   householders
     .filter((h) => h.lastInspectionDate)
@@ -814,6 +843,8 @@ const generateInspections = (): Inspection[] => {
         ccmInUse: Math.random() > 0.1,
         ccmCondition: Math.random() > 0.8 ? "needs_repair" : "good",
         woodUse: true,
+        woodUseQuality:
+          woodUseQualities[Math.floor(Math.random() * woodUseQualities.length)]!,
         hasKitchen: hh.hasKitchen,
         kitchenWellVentilated: hh.kitchenWellVentilated,
         kitchenRainproof: hh.kitchenRainproof,
@@ -821,7 +852,8 @@ const generateInspections = (): Inspection[] => {
         latitude: hh.latitude,
         longitude: hh.longitude,
         gpsAccuracy: hh.gpsAccuracy,
-        result: Math.random() > 0.85 ? "needs_attention" : "pass",
+        chiefName: chiefNames[Math.floor(Math.random() * chiefNames.length)]!,
+        leadCvName: leadCvNames[Math.floor(Math.random() * leadCvNames.length)]!,
       });
     });
 
