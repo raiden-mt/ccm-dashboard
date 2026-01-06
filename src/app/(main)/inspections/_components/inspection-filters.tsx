@@ -25,14 +25,14 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { Filter, Download, ChevronDownIcon } from "lucide-react";
-import { vpaAreas } from "~/lib/mock-data";
 
 import { parseAsIsoDate, parseAsString, useQueryState } from "nuqs";
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { loadSearchParams } from "~/lib/search-params";
+import type { FilterNames } from "./inspection-data-wrapper";
 
-export function InspectionFilters() {
+export function InspectionFilters(filterNames: FilterNames) {
   const searchParams = useSearchParams();
   const { year } = loadSearchParams(searchParams);
   const startOfYear = new Date(year, 0, 1);
@@ -144,8 +144,8 @@ export function InspectionFilters() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All VPAs</SelectItem>
-                {vpaAreas.map((v) => (
-                  <SelectItem key={v.id} value={v.id}>
+                {filterNames.vpa.map((v) => (
+                  <SelectItem key={v.id} value={v.name}>
                     {v.name}
                   </SelectItem>
                 ))}
@@ -161,10 +161,11 @@ export function InspectionFilters() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Conditions</SelectItem>
-                <SelectItem value="good">Good</SelectItem>
-                <SelectItem value="needs_repair">Needs Repair</SelectItem>
-                <SelectItem value="damaged">Damaged</SelectItem>
-                <SelectItem value="replaced">Replaced</SelectItem>
+                {filterNames.conditions.map((c) => (
+                  <SelectItem key={c.value} value={c.value}>
+                    {c.label}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
