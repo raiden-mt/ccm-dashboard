@@ -59,16 +59,6 @@ export function InspectionFilters() {
     parseAsString.withDefault("all"),
   );
 
-  const handleVpaChange = (value: string) => {
-    setVpaFilter(value);
-    onFiltersChange?.({ dateFrom, dateTo, vpaFilter: value, conditionFilter });
-  };
-
-  const handleConditionChange = (value: string) => {
-    setConditionFilter(value);
-    onFiltersChange?.({ dateFrom, dateTo, vpaFilter, conditionFilter: value });
-  };
-
   return (
     <Card>
       <CardHeader>
@@ -148,7 +138,7 @@ export function InspectionFilters() {
 
           <div className="space-y-2">
             <Label>VPA Area</Label>
-            <Select value={vpaFilter} onValueChange={handleVpaChange}>
+            <Select value={vpaFilter} onValueChange={setVpaFilter}>
               <SelectTrigger>
                 <SelectValue placeholder="All VPAs" />
               </SelectTrigger>
@@ -165,10 +155,7 @@ export function InspectionFilters() {
 
           <div className="space-y-2">
             <Label>Stove Condition</Label>
-            <Select
-              value={conditionFilter}
-              onValueChange={handleConditionChange}
-            >
+            <Select value={conditionFilter} onValueChange={setConditionFilter}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
