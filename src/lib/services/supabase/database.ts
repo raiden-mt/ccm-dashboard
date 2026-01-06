@@ -718,6 +718,7 @@ export type Database = {
           is_active: boolean
           lcv_area_id: string | null
           leave_date: string | null
+          legacy_user_id: string | null
           name: string
           phone: string | null
           position: Database["public"]["Enums"]["staff_position"]
@@ -734,6 +735,7 @@ export type Database = {
           is_active?: boolean
           lcv_area_id?: string | null
           leave_date?: string | null
+          legacy_user_id?: string | null
           name: string
           phone?: string | null
           position: Database["public"]["Enums"]["staff_position"]
@@ -750,6 +752,7 @@ export type Database = {
           is_active?: boolean
           lcv_area_id?: string | null
           leave_date?: string | null
+          legacy_user_id?: string | null
           name?: string
           phone?: string | null
           position?: Database["public"]["Enums"]["staff_position"]
@@ -1635,6 +1638,10 @@ export type Database = {
             }
             Returns: string
           }
+      broadcast_dashboard_stats: {
+        Args: { payload_year: number }
+        Returns: undefined
+      }
       broadcast_project_summary: {
         Args: {
           payload_data: Json
@@ -1793,8 +1800,8 @@ export type Database = {
       get_household_stats: {
         Args: { p_year: string }
         Returns: {
-          archived_households: number
           active_households: number
+          archived_households: number
         }[]
       }
       get_inspected_0_to_3_months_count: {
@@ -1890,6 +1897,13 @@ export type Database = {
           total_staff: number
         }[]
       }
+      get_stove_condition_names: {
+        Args: never
+        Returns: {
+          label: string
+          value: string
+        }[]
+      }
       get_stove_years: {
         Args: never
         Returns: {
@@ -1898,6 +1912,13 @@ export type Database = {
         }[]
       }
       get_total_kitchens: { Args: { year_param: number }; Returns: number }
+      get_vpa_names: {
+        Args: never
+        Returns: {
+          id: string
+          name: string
+        }[]
+      }
       get_well_ventilated_count: {
         Args: { year_param: number }
         Returns: number
@@ -2256,6 +2277,7 @@ export type Database = {
       st_geometryfromtext: { Args: { "": string }; Returns: unknown }
       st_geomfromewkt: { Args: { "": string }; Returns: unknown }
       st_geomfromgeojson:
+        | { Args: { "": Json }; Returns: unknown }
         | { Args: { "": Json }; Returns: unknown }
         | { Args: { "": string }; Returns: unknown }
       st_geomfromgml: { Args: { "": string }; Returns: unknown }
@@ -2720,6 +2742,7 @@ export const Constants = {
       ccm_condition: ["good", "needs_repair", "damaged", "replaced"],
       gender: ["male", "female", "other"],
       house_ownership: ["owned", "rented", "family"],
+      householder_archive_status: ["active", "temporary", "permanent"],
       inspection_color: ["green", "yellow", "red", "uninspected"],
       season: ["dry", "wet"],
       staff_position: [
