@@ -1,5 +1,6 @@
 import {
   createLoader,
+  createSearchParamsCache,
   parseAsInteger,
   parseAsIsoDate,
   parseAsString,
@@ -10,13 +11,13 @@ export const yearSearchParams = {
   year: parseAsInteger.withDefault(2025),
 };
 
-export const inspectionSearchParams = {
+export const inspectionSearchParamsCache = createSearchParamsCache({
   inspectionDateFrom: parseAsIsoDate.withDefault(
     new Date(new Date().getFullYear(), 0, 1),
   ),
   inspectionDateTo: parseAsIsoDate.withDefault(new Date()),
   inspectionVpa: parseAsString.withDefault("all"),
   inspectionStoveCondition: parseAsString.withDefault("all"),
-};
+});
 
 export const loadSearchParams = createLoader(yearSearchParams);
