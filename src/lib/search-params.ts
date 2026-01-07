@@ -18,6 +18,7 @@ export const inspectionSearchParamsCache = createSearchParamsCache({
   inspectionDateTo: parseAsIsoDate.withDefault(new Date()),
   inspectionVpa: parseAsString.withDefault("all"),
   inspectionStoveCondition: parseAsString.withDefault("all"),
+  inspectionTablePage: parseAsInteger.withDefault(1),
 });
 
 export const loadSearchParams = createLoader(yearSearchParams);
