@@ -15,7 +15,7 @@ export async function InspectionDataWrapper() {
     );
   }
 
-  await getInspectionData();
+  // await getInspectionData();
 
   return <InspectionDataClient {...filterNames} />;
 }
@@ -46,12 +46,13 @@ async function getFilterNames(): Promise<FilterNamesResult> {
   };
 }
 
-async function getInspectionData() {
+async function getInspectionData({ limit = 15 }: { limit?: number }) {
   const {
     inspectionDateFrom: dateFrom,
     inspectionDateTo: dateTo,
     inspectionVpa: vpa,
     inspectionStoveCondition: stoveCondition,
+    inspectionTablePage: page,
   } = inspectionSearchParamsCache.all();
 
   const dateFromStr = dateFrom.toISOString().split("T")[0];
@@ -64,6 +65,8 @@ async function getInspectionData() {
       p_date_to: dateToStr,
       p_vpa: vpa,
       p_stove_condition: stoveCondition,
+      p_limit: limit,
+      p_offset: (page - 1) * limit,
     }),
     supabase.rpc("get_inspection_records_count", {
       p_date_from: dateFromStr,
