@@ -41,22 +41,26 @@ export function InspectionFilters(filterNames: FilterNames) {
   const [dateFromOpen, setDateFromOpen] = useState(false);
   const [dateFrom, setDateFrom] = useQueryState(
     "inspectionDateFrom",
-    parseAsIsoDate.withDefault(new Date(year, 0, 1)),
+    parseAsIsoDate
+      .withDefault(new Date(year, 0, 1))
+      .withOptions({ shallow: false }),
   );
 
   const [dateToOpen, setDateToOpen] = useState(false);
   const [dateTo, setDateTo] = useQueryState(
     "inspectionDateTo",
-    parseAsIsoDate.withDefault(new Date(year, 11, 31)),
+    parseAsIsoDate
+      .withDefault(new Date(year, 11, 31))
+      .withOptions({ shallow: false }),
   );
 
   const [vpaFilter, setVpaFilter] = useQueryState(
     "inspectionVpa",
-    parseAsString.withDefault("all"),
+    parseAsString.withDefault("all").withOptions({ shallow: false }),
   );
   const [conditionFilter, setConditionFilter] = useQueryState(
     "inspectionStoveCondition",
-    parseAsString.withDefault("all"),
+    parseAsString.withDefault("all").withOptions({ shallow: false }),
   );
 
   return (
