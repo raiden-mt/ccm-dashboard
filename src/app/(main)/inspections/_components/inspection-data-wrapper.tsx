@@ -54,10 +54,41 @@ async function getInspectionData() {
     inspectionStoveCondition: stoveCondition,
   } = inspectionSearchParamsCache.all();
 
-  console.log("Date From:", dateFrom);
-  console.log("Date To:", dateTo);
-  console.log("VPA:", vpa);
-  console.log("Stove Condition:", stoveCondition);
+  const dateFromStr = dateFrom.toISOString().split("T")[0];
+  const dateToStr = dateTo.toISOString().split("T")[0];
+
+  const supabase = createAdminClient();
+  const [inspectionRecordsResult, inspectionCountResult] = await Promise.all([
+    supabase.rpc("get_inspection_records", {
+      p_date_from: dateFromStr,
+      p_date_to: dateToStr,
+      p_vpa: vpa,
+      p_stove_condition: stoveCondition,
+    }),
+    supabase.rpc("get_inspection_records_count", {
+      p_date_from: dateFromStr,
+      p_date_to: dateToStr,
+      p_vpa: vpa,
+      p_stove_condition: stoveCondition,
+    }),
+  ]);
+
+  if (inspectionRecordsResult.error || inspectionCountResult.error) {
+    return {
+      error: inspectionRecordsResult.error
+        ? "Failed to fetch inspection records"
+        : "Failed to fetch inspection records count",
+      data: null,
+    };
+  }
+
+  return {
+    data: {
+      inspectionRecords: inspectionRecordsResult.data,
+      inspectionRecordsCount: inspectionCountResult.data,
+    },
+    error: null,
+  };
 }
 
 // Type definitions
