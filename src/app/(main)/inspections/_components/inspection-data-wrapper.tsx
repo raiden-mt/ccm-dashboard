@@ -1,6 +1,7 @@
 import { createAdminClient } from "~/lib/services/supabase/server";
 import { InspectionDataClient } from "./inspection-data-client";
 import { InspectionDataErrorState } from "./inspection-data-error-state";
+import { inspectionSearchParamsCache } from "~/lib/search-params";
 
 export async function InspectionDataWrapper() {
   const { data: filterNames, error: filterNamesError } = await getFilterNames();
@@ -13,6 +14,8 @@ export async function InspectionDataWrapper() {
       />
     );
   }
+
+  await getInspectionData();
 
   return <InspectionDataClient {...filterNames} />;
 }
@@ -41,6 +44,20 @@ async function getFilterNames(): Promise<FilterNamesResult> {
     },
     error: null,
   };
+}
+
+async function getInspectionData() {
+  const {
+    inspectionDateFrom: dateFrom,
+    inspectionDateTo: dateTo,
+    inspectionVpa: vpa,
+    inspectionStoveCondition: stoveCondition,
+  } = inspectionSearchParamsCache.all();
+
+  console.log("Date From:", dateFrom);
+  console.log("Date To:", dateTo);
+  console.log("VPA:", vpa);
+  console.log("Stove Condition:", stoveCondition);
 }
 
 // Type definitions
