@@ -85,7 +85,7 @@ async function getInspectionData({
     supabase.rpc("get_inspection_records", {
       p_date_from: dateFromStr,
       p_date_to: dateToStr,
-      p_vpa: vpa,
+      p_vpa_name: vpa,
       p_stove_condition: stoveCondition,
       p_limit: limit,
       p_offset: (page - 1) * limit,
@@ -93,13 +93,12 @@ async function getInspectionData({
     supabase.rpc("get_inspection_records_count", {
       p_date_from: dateFromStr,
       p_date_to: dateToStr,
-      p_vpa: vpa,
+      p_vpa_name: vpa,
       p_stove_condition: stoveCondition,
     }),
   ]);
 
   if (inspectionRecordsResult.error || inspectionCountResult.error) {
-    console.log("Error:", inspectionRecordsResult.error);
     return {
       error: inspectionRecordsResult.error
         ? "Failed to fetch inspection records"
