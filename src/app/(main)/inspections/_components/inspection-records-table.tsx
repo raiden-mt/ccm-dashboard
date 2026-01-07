@@ -94,7 +94,7 @@ export function InspectionRecordsTable({
                             : ""
                       }
                     >
-                      {i.ccm_condition.replace("_", " ")}
+                      {i.ccm_condition}
                     </Badge>
                   </TableCell>
                   <TableCell>
