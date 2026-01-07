@@ -12,10 +12,9 @@ export const yearSearchParams = {
 };
 
 export const inspectionSearchParamsCache = createSearchParamsCache({
-  inspectionDateFrom: parseAsIsoDate.withDefault(
-    new Date(new Date().getFullYear(), 0, 1),
-  ),
-  inspectionDateTo: parseAsIsoDate.withDefault(new Date()),
+  year: parseAsInteger.withDefault(2025),
+  inspectionDateFrom: parseAsIsoDate,
+  inspectionDateTo: parseAsIsoDate,
   inspectionVpa: parseAsString.withDefault("all"),
   inspectionStoveCondition: parseAsString.withDefault("all"),
   inspectionTablePage: parseAsInteger.withDefault(1),

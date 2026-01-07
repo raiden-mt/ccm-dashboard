@@ -70,15 +70,19 @@ async function getInspectionData({
   limit?: number;
 }): Promise<InspectionDataResult> {
   const {
+    year,
     inspectionDateFrom: dateFrom,
     inspectionDateTo: dateTo,
     inspectionVpa: vpa,
     inspectionStoveCondition: stoveCondition,
     inspectionTablePage: page,
   } = inspectionSearchParamsCache.all();
-
-  const dateFromStr = dateFrom.toISOString().split("T")[0];
-  const dateToStr = dateTo.toISOString().split("T")[0];
+  const dateFromStr = dateFrom
+    ? dateFrom.toISOString().split("T")[0]
+    : new Date(year, 0, 1).toISOString().split("T")[0];
+  const dateToStr = dateTo
+    ? dateTo.toISOString().split("T")[0]
+    : new Date(year, 11, 31).toISOString().split("T")[0];
 
   const supabase = createAdminClient();
   const [inspectionRecordsResult, inspectionCountResult] = await Promise.all([
