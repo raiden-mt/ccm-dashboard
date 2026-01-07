@@ -46,7 +46,11 @@ async function getFilterNames(): Promise<FilterNamesResult> {
   };
 }
 
-async function getInspectionData({ limit = 15 }: { limit?: number }) {
+async function getInspectionData({
+  limit = 15,
+}: {
+  limit?: number;
+}): Promise<InspectionDataResult> {
   const {
     inspectionDateFrom: dateFrom,
     inspectionDateTo: dateTo,
@@ -87,8 +91,8 @@ async function getInspectionData({ limit = 15 }: { limit?: number }) {
 
   return {
     data: {
-      inspectionRecords: inspectionRecordsResult.data,
-      inspectionRecordsCount: inspectionCountResult.data,
+      inspectionRecords: inspectionRecordsResult.data ?? [],
+      inspectionRecordsCount: inspectionCountResult.data ?? 0,
     },
     error: null,
   };
@@ -106,6 +110,37 @@ type FilterNamesResult =
         vpa: Array<{ id: string; name: string }>;
         conditions: Array<{ value: string; label: string }>;
       };
+      error: null;
+    }
+  | {
+      data: null;
+      error: string;
+    };
+
+export type InspectionRecord = {
+  id: string;
+  householder_name: string;
+  inspection_date: string;
+  inspector_name: string;
+  chief_name: string;
+  lead_cv_name: string;
+  ccm_in_use: boolean;
+  ccm_condition: string;
+  wood_use: boolean;
+  has_kitchen: boolean;
+  kitchen_well_ventilated: boolean;
+  kitchen_rainproof: boolean;
+  vpa_name: string;
+};
+
+export type InspectionData = {
+  inspectionRecords: InspectionRecord[];
+  inspectionRecordsCount: number;
+};
+
+type InspectionDataResult =
+  | {
+      data: InspectionData;
       error: null;
     }
   | {
