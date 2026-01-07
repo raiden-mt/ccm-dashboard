@@ -26,11 +26,17 @@ import {
 } from "~/components/ui/select";
 import { Filter, Download, ChevronDownIcon } from "lucide-react";
 
-import { parseAsInteger, parseAsIsoDate, parseAsString, useQueryState } from "nuqs";
+import {
+  parseAsInteger,
+  parseAsIsoDate,
+  parseAsString,
+  useQueryState,
+} from "nuqs";
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { loadSearchParams } from "~/lib/search-params";
 import type { FilterNames } from "./inspection-data-wrapper";
+import { exportInspectionData } from "../_actions";
 
 export function InspectionFilters(filterNames: FilterNames) {
   const searchParams = useSearchParams();
@@ -198,10 +204,24 @@ export function InspectionFilters(filterNames: FilterNames) {
           </div>
 
           <div className="flex items-end">
-            <Button className="w-full gap-2">
-              <Download className="h-4 w-4" />
-              Export
-            </Button>
+            <form action={exportInspectionData}>
+              <input
+                type="hidden"
+                name="dateFrom"
+                value={dateFrom.toISOString().split("T")[0]}
+              />
+              <input
+                type="hidden"
+                name="dateTo"
+                value={dateTo.toISOString().split("T")[0]}
+              />
+              <input type="hidden" name="vpa" value={vpaFilter} />
+              <input type="hidden" name="condition" value={conditionFilter} />
+              <Button type="submit" className="w-full gap-2">
+                <Download className="h-4 w-4" />
+                Export
+              </Button>
+            </form>
           </div>
         </div>
       </CardContent>
