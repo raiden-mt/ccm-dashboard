@@ -26,7 +26,7 @@ import {
 } from "~/components/ui/select";
 import { Filter, Download, ChevronDownIcon } from "lucide-react";
 
-import { parseAsIsoDate, parseAsString, useQueryState } from "nuqs";
+import { parseAsInteger, parseAsIsoDate, parseAsString, useQueryState } from "nuqs";
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { loadSearchParams } from "~/lib/search-params";
@@ -62,6 +62,15 @@ export function InspectionFilters(filterNames: FilterNames) {
     "inspectionStoveCondition",
     parseAsString.withDefault("all").withOptions({ shallow: false }),
   );
+
+  // Page state - we need this to reset page when filters change
+  const [, setPage] = useQueryState(
+    "inspectionTablePage",
+    parseAsInteger.withDefault(1).withOptions({ shallow: false }),
+  );
+
+  // Helper to reset page to 1 when any filter changes
+  const resetPage = () => void setPage(1);
 
   return (
     <Card>
@@ -100,6 +109,7 @@ export function InspectionFilters(filterNames: FilterNames) {
                   disabled={[{ before: startOfYear }, { after: endOfYear }]}
                   onSelect={(date) => {
                     void setDateFrom(date ?? startOfYear);
+                    resetPage();
                     setDateFromOpen(false);
                   }}
                   className="rounded-md border"
@@ -131,6 +141,7 @@ export function InspectionFilters(filterNames: FilterNames) {
                   disabled={[{ before: startOfYear }, { after: endOfYear }]}
                   onSelect={(date) => {
                     void setDateTo(date ?? endOfYear);
+                    resetPage();
                     setDateToOpen(false);
                   }}
                   defaultMonth={dateTo ?? endOfYear}
@@ -142,7 +153,13 @@ export function InspectionFilters(filterNames: FilterNames) {
 
           <div className="space-y-2">
             <Label>VPA Area</Label>
-            <Select value={vpaFilter} onValueChange={setVpaFilter}>
+            <Select
+              value={vpaFilter}
+              onValueChange={(value) => {
+                void setVpaFilter(value);
+                resetPage();
+              }}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="All VPAs" />
               </SelectTrigger>
@@ -159,7 +176,13 @@ export function InspectionFilters(filterNames: FilterNames) {
 
           <div className="space-y-2">
             <Label>Stove Condition</Label>
-            <Select value={conditionFilter} onValueChange={setConditionFilter}>
+            <Select
+              value={conditionFilter}
+              onValueChange={(value) => {
+                void setConditionFilter(value);
+                resetPage();
+              }}
+            >
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>

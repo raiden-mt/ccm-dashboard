@@ -16,8 +16,11 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
+import { TablePagination } from "~/components/ui/table-pagination";
 
 import type { InspectionRecord } from "./inspection-data-wrapper";
+
+const PAGE_SIZE = 15;
 
 export function InspectionRecordsTable({
   inspections,
@@ -31,10 +34,10 @@ export function InspectionRecordsTable({
       <CardHeader>
         <CardTitle>Inspection Records</CardTitle>
         <CardDescription>
-          Showing {inspections.length} of {totalInspections} inspections
+          {totalInspections.toLocaleString()} inspections found
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="space-y-4">
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
@@ -128,6 +131,12 @@ export function InspectionRecordsTable({
             </TableBody>
           </Table>
         </div>
+
+        <TablePagination
+          pageParamName="inspectionTablePage"
+          totalItems={totalInspections}
+          pageSize={PAGE_SIZE}
+        />
       </CardContent>
     </Card>
   );
