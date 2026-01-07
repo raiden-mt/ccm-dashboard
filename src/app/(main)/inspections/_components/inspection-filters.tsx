@@ -36,7 +36,6 @@ import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { loadSearchParams } from "~/lib/search-params";
 import type { FilterNames } from "./inspection-data-wrapper";
-import { exportInspectionData } from "../_actions";
 
 export function InspectionFilters(filterNames: FilterNames) {
   const searchParams = useSearchParams();
@@ -204,7 +203,7 @@ export function InspectionFilters(filterNames: FilterNames) {
           </div>
 
           <div className="flex items-end">
-            <form action={exportInspectionData}>
+            <form action="/api/inspections/export" method="POST">
               <input
                 type="hidden"
                 name="dateFrom"
