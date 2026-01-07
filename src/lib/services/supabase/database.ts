@@ -1829,6 +1829,40 @@ export type Database = {
         Args: { year_param: number };
         Returns: number;
       };
+      get_inspection_records: {
+        Args: {
+          p_date_from?: string;
+          p_date_to?: string;
+          p_limit?: number;
+          p_offset?: number;
+          p_stove_condition?: string;
+          p_vpa_name?: string;
+        };
+        Returns: {
+          ccm_condition: string;
+          ccm_in_use: boolean;
+          chief_name: string;
+          has_kitchen: boolean;
+          householder_name: string;
+          id: string;
+          inspection_date: string;
+          inspector_name: string;
+          kitchen_rainproof: boolean;
+          kitchen_well_ventilated: boolean;
+          lead_cv_name: string;
+          vpa_name: string;
+          wood_use: boolean;
+        }[];
+      };
+      get_inspection_records_count: {
+        Args: {
+          p_date_from?: string;
+          p_date_to?: string;
+          p_stove_condition?: string;
+          p_vpa_name?: string;
+        };
+        Returns: number;
+      };
       get_inspection_stats: {
         Args: { p_year: string };
         Returns: {

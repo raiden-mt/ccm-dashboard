@@ -4,7 +4,15 @@ import { InspectionStatCards } from "./_components/inspection-stat-cards";
 import { InspectionTrendsChart } from "./_components/inspection-trends-chart";
 import { InspectionDataWrapper } from "./_components/inspection-data-wrapper";
 
-export default async function InspectionsPage() {
+import { inspectionSearchParamsCache } from "~/lib/search-params";
+import type { SearchParams } from "nuqs/server";
+
+type PageProps = {
+  searchParams: Promise<SearchParams>;
+};
+
+export default async function InspectionsPage({ searchParams }: PageProps) {
+  await inspectionSearchParamsCache.parse(searchParams);
   const user = await getCurrentUser();
 
   if (!user) {

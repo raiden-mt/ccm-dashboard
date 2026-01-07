@@ -1,5 +1,6 @@
 import {
   createLoader,
+  createSearchParamsCache,
   parseAsInteger,
   parseAsIsoDate,
   parseAsString,
@@ -8,14 +9,15 @@ import {
 // Describe your search params, and reuse this in useQueryStates / createSerializer:
 export const yearSearchParams = {
   year: parseAsInteger.withDefault(2025),
+};
 
-  // Inspection search params
-  inspectionDateFrom: parseAsIsoDate.withDefault(
-    new Date(new Date().getFullYear(), 0, 1),
-  ),
-  inspectionDateTo: parseAsIsoDate.withDefault(new Date()),
+export const inspectionSearchParamsCache = createSearchParamsCache({
+  year: parseAsInteger.withDefault(2025),
+  inspectionDateFrom: parseAsIsoDate,
+  inspectionDateTo: parseAsIsoDate,
   inspectionVpa: parseAsString.withDefault("all"),
   inspectionStoveCondition: parseAsString.withDefault("all"),
-};
+  inspectionTablePage: parseAsInteger.withDefault(1),
+});
 
 export const loadSearchParams = createLoader(yearSearchParams);

@@ -1,20 +1,41 @@
 import { createAdminClient } from "~/lib/services/supabase/server";
 import { InspectionDataClient } from "./inspection-data-client";
 import { InspectionDataErrorState } from "./inspection-data-error-state";
+import { inspectionSearchParamsCache } from "~/lib/search-params";
 
 export async function InspectionDataWrapper() {
-  const { data: filterNames, error: filterNamesError } = await getFilterNames();
-  if (filterNamesError || !filterNames) {
-    return (
+  const [filterNamesResult, inspectionDataResult] = await Promise.all([
+    getFilterNames(),
+    getInspectionData({ limit: 15 }),
+  ]);
+
+  if (
+    filterNamesResult.error ||
+    !filterNamesResult.data ||
+    inspectionDataResult.error ||
+    !inspectionDataResult.data
+  ) {
+    return inspectionDataResult.error || !inspectionDataResult.data ? (
+      <InspectionDataErrorState
+        title="Unable to load inspection data"
+        description="We couldn’t fetch the inspection data needed to display the inspection records."
+        error={inspectionDataResult.error}
+      />
+    ) : (
       <InspectionDataErrorState
         title="Unable to load inspection filters"
         description="We couldn’t fetch the filter options needed to request inspection data."
-        error={filterNamesError ?? "No filter options were returned."}
+        error={filterNamesResult.error ?? "No filter options were returned."}
       />
     );
   }
 
-  return <InspectionDataClient {...filterNames} />;
+  return (
+    <InspectionDataClient
+      filterNames={filterNamesResult.data}
+      inspectionData={inspectionDataResult.data}
+    />
+  );
 }
 
 async function getFilterNames(): Promise<FilterNamesResult> {
@@ -43,6 +64,62 @@ async function getFilterNames(): Promise<FilterNamesResult> {
   };
 }
 
+async function getInspectionData({
+  limit = 15,
+}: {
+  limit?: number;
+}): Promise<InspectionDataResult> {
+  const {
+    year,
+    inspectionDateFrom: dateFrom,
+    inspectionDateTo: dateTo,
+    inspectionVpa: vpa,
+    inspectionStoveCondition: stoveCondition,
+    inspectionTablePage: page,
+  } = inspectionSearchParamsCache.all();
+  const dateFromStr = dateFrom
+    ? dateFrom.toISOString().split("T")[0]
+    : new Date(year, 0, 1).toISOString().split("T")[0];
+  const dateToStr = dateTo
+    ? dateTo.toISOString().split("T")[0]
+    : new Date(year, 11, 31).toISOString().split("T")[0];
+
+  const supabase = createAdminClient();
+  const [inspectionRecordsResult, inspectionCountResult] = await Promise.all([
+    supabase.rpc("get_inspection_records", {
+      p_date_from: dateFromStr,
+      p_date_to: dateToStr,
+      p_vpa_name: vpa,
+      p_stove_condition: stoveCondition,
+      p_limit: limit,
+      p_offset: (page - 1) * limit,
+    }),
+    supabase.rpc("get_inspection_records_count", {
+      p_date_from: dateFromStr,
+      p_date_to: dateToStr,
+      p_vpa_name: vpa,
+      p_stove_condition: stoveCondition,
+    }),
+  ]);
+
+  if (inspectionRecordsResult.error || inspectionCountResult.error) {
+    return {
+      error: inspectionRecordsResult.error
+        ? "Failed to fetch inspection records"
+        : "Failed to fetch inspection records count",
+      data: null,
+    };
+  }
+
+  return {
+    data: {
+      inspectionRecords: inspectionRecordsResult.data ?? [],
+      inspectionRecordsCount: inspectionCountResult.data ?? 0,
+    },
+    error: null,
+  };
+}
+
 // Type definitions
 export type FilterNames = {
   vpa: Array<{ id: string; name: string }>;
@@ -55,6 +132,37 @@ type FilterNamesResult =
         vpa: Array<{ id: string; name: string }>;
         conditions: Array<{ value: string; label: string }>;
       };
+      error: null;
+    }
+  | {
+      data: null;
+      error: string;
+    };
+
+export type InspectionRecord = {
+  id: string;
+  householder_name: string;
+  inspection_date: string;
+  inspector_name: string;
+  chief_name: string;
+  lead_cv_name: string;
+  ccm_in_use: boolean;
+  ccm_condition: string;
+  wood_use: boolean;
+  has_kitchen: boolean;
+  kitchen_well_ventilated: boolean;
+  kitchen_rainproof: boolean;
+  vpa_name: string;
+};
+
+export type InspectionData = {
+  inspectionRecords: InspectionRecord[];
+  inspectionRecordsCount: number;
+};
+
+type InspectionDataResult =
+  | {
+      data: InspectionData;
       error: null;
     }
   | {
