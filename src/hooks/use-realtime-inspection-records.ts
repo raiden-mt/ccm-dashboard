@@ -83,16 +83,19 @@ export function useRealtimeInspectionRecords(): UseRealtimeInspectionRecordsResu
           if (!Number.isFinite(payloadYear) || payloadYear !== year) return;
 
           const record = payload.record as InspectionRecord | undefined;
-          if (!record || typeof record !== "object" || !("id" in record)) return;
+          if (!record || typeof record !== "object" || !("id" in record))
+            return;
 
-          const id = String((record as { id?: unknown }).id ?? "");
+          const id = typeof record.id === "string" ? record.id : null;
           if (!id) return;
 
           setRecordsById((prev) => ({ ...prev, [id]: record }));
 
-          const type = String(payload.type ?? "");
+          const type = typeof payload.type === "string" ? payload.type : null;
           if (type === "INSERT") {
-            setInsertedById((prev) => (prev[id] ? prev : { ...prev, [id]: true }));
+            setInsertedById((prev) =>
+              prev[id] ? prev : { ...prev, [id]: true },
+            );
           }
         };
 
@@ -111,9 +114,9 @@ export function useRealtimeInspectionRecords(): UseRealtimeInspectionRecordsResu
         }
 
         // Subscribe to the channel
-        channel.subscribe((status, err) => {
-          if (status === "CHANNEL_ERROR") {
-            console.error("Realtime channel error: inspection_records", err);
+        channel.subscribe((status) => {
+          if ((status as string) === "CHANNEL_ERROR") {
+            console.error("Realtime channel error: inspection_records");
           }
         });
       } catch (error) {
@@ -155,4 +158,3 @@ export function useRealtimeInspectionRecords(): UseRealtimeInspectionRecordsResu
     clearRealtimeRecords,
   };
 }
-
