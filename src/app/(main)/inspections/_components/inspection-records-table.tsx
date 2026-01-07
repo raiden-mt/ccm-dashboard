@@ -16,24 +16,22 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import { inspections, staff, householders } from "~/lib/mock-data";
 
-export function InspectionRecordsTable() {
-  const getStaffName = (id: string) =>
-    staff.find((s) => s.id === id)?.name ?? "Unknown";
+import type { InspectionRecord } from "./inspection-data-wrapper";
 
-  const getHouseholderName = (id: string) => {
-    const hh = householders.find((h) => h.id === id);
-    return hh ? `${hh.firstName} ${hh.lastName}` : "Unknown";
-  };
-
+export function InspectionRecordsTable({
+  inspections,
+  totalInspections,
+}: {
+  inspections: InspectionRecord[];
+  totalInspections: number;
+}) {
   return (
     <Card>
       <CardHeader>
         <CardTitle>Inspection Records</CardTitle>
         <CardDescription>
-          Showing {Math.min(inspections.length, 15)} of {inspections.length}{" "}
-          inspections
+          Showing {inspections.length} of {totalInspections} inspections
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -57,83 +55,72 @@ export function InspectionRecordsTable() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {inspections.slice(0, 15).map((i) => (
+              {inspections.map((i) => (
                 <TableRow key={i.id}>
                   <TableCell className="bg-background sticky left-0 z-10 font-medium whitespace-nowrap">
-                    {getHouseholderName(i.householderId)}
+                    {i.householder_name}
                   </TableCell>
                   <TableCell className="whitespace-nowrap">
-                    {i.inspectionDate}
+                    {i.inspection_date}
                   </TableCell>
                   <TableCell className="whitespace-nowrap">
-                    {getStaffName(i.staffId)}
+                    {i.inspector_name}
                   </TableCell>
                   <TableCell className="whitespace-nowrap">
-                    {i.chiefName}
+                    {i.chief_name}
                   </TableCell>
                   <TableCell className="whitespace-nowrap">
-                    {i.leadCvName}
+                    {i.lead_cv_name}
                   </TableCell>
                   <TableCell>
-                    <Badge variant={i.ccmInUse ? "default" : "secondary"}>
-                      {i.ccmInUse ? "Yes" : "No"}
+                    <Badge variant={i.ccm_in_use ? "default" : "secondary"}>
+                      {i.ccm_in_use ? "Yes" : "No"}
                     </Badge>
                   </TableCell>
                   <TableCell>
                     <Badge
                       variant={
-                        i.ccmCondition === "good"
+                        i.ccm_condition === "good"
                           ? "default"
-                          : i.ccmCondition === "needs_repair"
+                          : i.ccm_condition === "needs_repair"
                             ? "secondary"
                             : "destructive"
                       }
                       className={
-                        i.ccmCondition === "good"
+                        i.ccm_condition === "good"
                           ? "bg-green-500 hover:bg-green-600"
-                          : i.ccmCondition === "needs_repair"
+                          : i.ccm_condition === "needs_repair"
                             ? "bg-yellow-500 hover:bg-yellow-600"
                             : ""
                       }
                     >
-                      {i.ccmCondition.replace("_", " ")}
+                      {i.ccm_condition.replace("_", " ")}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant={i.wood_use ? "default" : "destructive"}>
+                      {i.wood_use ? "Yes" : "No"}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant={i.has_kitchen ? "default" : "outline"}>
+                      {i.has_kitchen ? "Yes" : "No"}
                     </Badge>
                   </TableCell>
                   <TableCell>
                     <Badge
                       variant={
-                        i.woodUseQuality === "good"
-                          ? "default"
-                          : i.woodUseQuality === "fair"
-                            ? "secondary"
-                            : "destructive"
-                      }
-                      className={
-                        i.woodUseQuality === "good"
-                          ? "bg-green-500 hover:bg-green-600"
-                          : i.woodUseQuality === "fair"
-                            ? "bg-yellow-500 hover:bg-yellow-600"
-                            : ""
+                        i.kitchen_well_ventilated ? "default" : "outline"
                       }
                     >
-                      {i.woodUseQuality}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant={i.hasKitchen ? "default" : "outline"}>
-                      {i.hasKitchen ? "Yes" : "No"}
+                      {i.kitchen_well_ventilated ? "Yes" : "No"}
                     </Badge>
                   </TableCell>
                   <TableCell>
                     <Badge
-                      variant={i.kitchenWellVentilated ? "default" : "outline"}
+                      variant={i.kitchen_rainproof ? "default" : "outline"}
                     >
-                      {i.kitchenWellVentilated ? "Yes" : "No"}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant={i.kitchenRainproof ? "default" : "outline"}>
-                      {i.kitchenRainproof ? "Yes" : "No"}
+                      {i.kitchen_rainproof ? "Yes" : "No"}
                     </Badge>
                   </TableCell>
                 </TableRow>

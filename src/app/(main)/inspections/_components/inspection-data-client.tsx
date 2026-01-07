@@ -1,14 +1,23 @@
 "use client";
 
-import type { FilterNames } from "./inspection-data-wrapper";
+import type { FilterNames, InspectionData } from "./inspection-data-wrapper";
 import { InspectionFilters } from "./inspection-filters";
 import { InspectionRecordsTable } from "./inspection-records-table";
 
-export function InspectionDataClient(filterNames: FilterNames) {
+export function InspectionDataClient({
+  filterNames,
+  inspectionData,
+}: {
+  filterNames: FilterNames;
+  inspectionData: InspectionData;
+}) {
   return (
     <>
       <InspectionFilters {...filterNames} />
-      <InspectionRecordsTable />
+      <InspectionRecordsTable
+        inspections={inspectionData.inspectionRecords}
+        totalInspections={inspectionData.inspectionRecordsCount}
+      />
     </>
   );
 }

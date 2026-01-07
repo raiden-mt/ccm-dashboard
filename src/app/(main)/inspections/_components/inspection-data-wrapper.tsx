@@ -4,20 +4,38 @@ import { InspectionDataErrorState } from "./inspection-data-error-state";
 import { inspectionSearchParamsCache } from "~/lib/search-params";
 
 export async function InspectionDataWrapper() {
-  const { data: filterNames, error: filterNamesError } = await getFilterNames();
-  if (filterNamesError || !filterNames) {
-    return (
+  const [filterNamesResult, inspectionDataResult] = await Promise.all([
+    getFilterNames(),
+    getInspectionData({ limit: 15 }),
+  ]);
+
+  if (
+    filterNamesResult.error ||
+    !filterNamesResult.data ||
+    inspectionDataResult.error ||
+    !inspectionDataResult.data
+  ) {
+    return inspectionDataResult.error || !inspectionDataResult.data ? (
+      <InspectionDataErrorState
+        title="Unable to load inspection data"
+        description="We couldn’t fetch the inspection data needed to display the inspection records."
+        error={inspectionDataResult.error}
+      />
+    ) : (
       <InspectionDataErrorState
         title="Unable to load inspection filters"
         description="We couldn’t fetch the filter options needed to request inspection data."
-        error={filterNamesError ?? "No filter options were returned."}
+        error={filterNamesResult.error ?? "No filter options were returned."}
       />
     );
   }
 
-  // await getInspectionData();
-
-  return <InspectionDataClient {...filterNames} />;
+  return (
+    <InspectionDataClient
+      filterNames={filterNamesResult.data}
+      inspectionData={inspectionDataResult.data}
+    />
+  );
 }
 
 async function getFilterNames(): Promise<FilterNamesResult> {
@@ -81,6 +99,7 @@ async function getInspectionData({
   ]);
 
   if (inspectionRecordsResult.error || inspectionCountResult.error) {
+    console.log("Error:", inspectionRecordsResult.error);
     return {
       error: inspectionRecordsResult.error
         ? "Failed to fetch inspection records"
