@@ -8,8 +8,9 @@ import {
 // Describe your search params, and reuse this in useQueryStates / createSerializer:
 export const yearSearchParams = {
   year: parseAsInteger.withDefault(2025),
+};
 
-  // Inspection search params
+export const inspectionSearchParams = {
   inspectionDateFrom: parseAsIsoDate.withDefault(
     new Date(new Date().getFullYear(), 0, 1),
   ),
