@@ -3,7 +3,11 @@
 import { useSearchParams } from "next/navigation";
 import { parseAsIsoDate, parseAsString, useQueryState } from "nuqs";
 
-import type { FilterNames, InspectionData } from "./inspection-data-wrapper";
+import type {
+  FilterNames,
+  InspectionData,
+  InspectionRecord,
+} from "./inspection-data-wrapper";
 import { InspectionFilters } from "./inspection-filters";
 import { InspectionRecordsTable } from "./inspection-records-table";
 import { useRealtimeInspectionRecords } from "~/hooks/use-realtime-inspection-records";
@@ -38,10 +42,12 @@ export function InspectionDataClient({
   );
 
   // Subscribe to realtime inspection record updates
-  const { newRecords } = useRealtimeInspectionRecords();
+  const { recordsById, insertedById } = useRealtimeInspectionRecords() as {
+    recordsById: Record<string, InspectionRecord>;
+    insertedById: Record<string, true>;
+  };
 
-  // Filter realtime records to match current filter criteria
-  const filteredNewRecords = newRecords.filter((record) => {
+  const recordMatchesFilters = (record: InspectionRecord) => {
     // Check date range
     const recordDate = new Date(record.inspection_date);
     if (dateFrom && recordDate < dateFrom) return false;
@@ -55,22 +61,27 @@ export function InspectionDataClient({
       return false;
 
     return true;
-  });
+  };
 
   // Merge realtime records with server-fetched records
-  // New records go at the top since they're most recent
-  // Get IDs of existing records to avoid duplicates
   const existingIds = new Set(
     inspectionData.inspectionRecords.map((r) => r.id),
   );
 
-  // Filter out any realtime records that already exist in server data
-  const uniqueNewRecords = filteredNewRecords.filter(
-    (r) => !existingIds.has(r.id),
+  // Apply updates (overrides) to any records already in the server-provided page
+  const serverRecordsWithOverrides = inspectionData.inspectionRecords.map(
+    (r) => recordsById[r.id] ?? r,
   );
 
+  // Only prepend records that were inserted while the page is open
+  const insertedRecords: InspectionRecord[] = Object.keys(insertedById)
+    .map((id) => recordsById[id])
+    .filter((r): r is InspectionRecord => Boolean(r))
+    .filter(recordMatchesFilters)
+    .filter((r) => !existingIds.has(r.id));
+
   // Combine: new records first (sorted by date desc), then existing records
-  const combined = [...uniqueNewRecords, ...inspectionData.inspectionRecords];
+  const combined = [...insertedRecords, ...serverRecordsWithOverrides];
 
   // Sort by inspection_date descending to maintain order
   const mergedInspections = combined.sort((a, b) => {
@@ -81,7 +92,7 @@ export function InspectionDataClient({
 
   // Update total count to include new realtime records
   const totalCount =
-    inspectionData.inspectionRecordsCount + filteredNewRecords.length;
+    inspectionData.inspectionRecordsCount + insertedRecords.length;
 
   return (
     <>

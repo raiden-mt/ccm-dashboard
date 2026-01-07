@@ -8,14 +8,17 @@ import type { RealtimeChannel, Session } from "@supabase/supabase-js";
 import type { InspectionRecord } from "~/app/(main)/inspections/_components/inspection-data-wrapper";
 
 export interface RealtimeInspectionUpdate {
-  type: "INSERT";
+  type: "INSERT" | "UPDATE";
   record: InspectionRecord;
   year: number;
 }
 
 export interface UseRealtimeInspectionRecordsResult {
-  newRecords: InspectionRecord[];
-  clearNewRecords: () => void;
+  /** Latest version of any inspection record we've received via realtime, keyed by inspection id */
+  recordsById: Record<string, InspectionRecord>;
+  /** Set of inspection ids that were inserted (used to adjust counts / prepend new rows) */
+  insertedById: Record<string, true>;
+  clearRealtimeRecords: () => void;
 }
 
 /**
@@ -26,11 +29,16 @@ export function useRealtimeInspectionRecords(): UseRealtimeInspectionRecordsResu
   const searchParams = useSearchParams();
   const year = Number(loadSearchParams(searchParams).year);
 
-  const [newRecords, setNewRecords] = useState<InspectionRecord[]>([]);
+  const [recordsById, setRecordsById] = useState<
+    Record<string, InspectionRecord>
+  >({});
+  const [insertedById, setInsertedById] = useState<Record<string, true>>({});
   const channelRef = useRef<RealtimeChannel | null>(null);
+  const handlersBoundRef = useRef<boolean>(false);
 
-  const clearNewRecords = () => {
-    setNewRecords([]);
+  const clearRealtimeRecords = () => {
+    setRecordsById({});
+    setInsertedById({});
   };
 
   useEffect(() => {
@@ -38,8 +46,10 @@ export function useRealtimeInspectionRecords(): UseRealtimeInspectionRecordsResu
     let authSubscription: { unsubscribe: () => void } | null = null;
     let cancelled = false;
 
-    // Reset new records when year changes
-    setNewRecords([]);
+    // Reset whenever year changes
+    setRecordsById({});
+    setInsertedById({});
+    handlersBoundRef.current = false;
 
     async function subscribeToChannel(session: Session | null) {
       if (cancelled || !session) return;
@@ -49,45 +59,56 @@ export function useRealtimeInspectionRecords(): UseRealtimeInspectionRecordsResu
         await supabase.realtime.setAuth(session.access_token);
         if (cancelled) return;
 
-        // Check if already subscribed
-        if (channelRef.current?.state === "subscribed") return;
-
-        // Clean up existing channel if any
-        if (channelRef.current) {
-          await supabase.removeChannel(channelRef.current);
-          channelRef.current = null;
-        }
-
-        // Create private channel for inspection records scoped by year
-        const channel = supabase.channel(`inspection_records:${year}`, {
+        const channelName = `inspection_records:${year}`;
+        channelRef.current ??= supabase.channel(channelName, {
           config: {
             broadcast: { self: true, ack: true },
             private: true,
           },
         });
 
-        channelRef.current = channel;
+        const channel = channelRef.current;
+        if (!channel) return;
+        if ((channel as unknown as { state?: string }).state === "subscribed") {
+          return;
+        }
 
-        // Listen for broadcast events from database triggers
-        channel.on(
-          "broadcast",
-          { event: "inspection_inserted" },
-          (payload: { payload: RealtimeInspectionUpdate }) => {
-            const update = payload.payload;
+        const handleInspectionMessage = (message: unknown) => {
+          const envelope = message as Record<string, unknown>;
+          const payload =
+            (envelope.payload as Record<string, unknown> | undefined) ??
+            envelope;
 
-            // Only process records for the current year
-            if (update.year !== year) return;
+          const payloadYear = Number(payload.year);
+          if (!Number.isFinite(payloadYear) || payloadYear !== year) return;
 
-            setNewRecords((prev) => {
-              // Avoid duplicates by checking if record already exists
-              if (prev.some((r) => r.id === update.record.id)) {
-                return prev;
-              }
-              // Add new record at the beginning (most recent first)
-              return [update.record, ...prev];
-            });
-          },
-        );
+          const record = payload.record as InspectionRecord | undefined;
+          if (!record || typeof record !== "object" || !("id" in record)) return;
+
+          const id = String((record as { id?: unknown }).id ?? "");
+          if (!id) return;
+
+          setRecordsById((prev) => ({ ...prev, [id]: record }));
+
+          const type = String(payload.type ?? "");
+          if (type === "INSERT") {
+            setInsertedById((prev) => (prev[id] ? prev : { ...prev, [id]: true }));
+          }
+        };
+
+        if (!handlersBoundRef.current) {
+          channel.on(
+            "broadcast",
+            { event: "inspection_inserted" },
+            handleInspectionMessage,
+          );
+          channel.on(
+            "broadcast",
+            { event: "inspection_updated" },
+            handleInspectionMessage,
+          );
+          handlersBoundRef.current = true;
+        }
 
         // Subscribe to the channel
         channel.subscribe((status, err) => {
@@ -129,8 +150,9 @@ export function useRealtimeInspectionRecords(): UseRealtimeInspectionRecordsResu
   }, [year]);
 
   return {
-    newRecords,
-    clearNewRecords,
+    recordsById,
+    insertedById,
+    clearRealtimeRecords,
   };
 }
 
