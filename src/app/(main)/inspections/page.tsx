@@ -1,10 +1,9 @@
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "~/lib/services/supabase/lib/getCurrentUser";
 import { InspectionStatCards } from "./_components/inspection-stat-cards";
-import { MonthlyInspectionsChart } from "./_components/monthly-inspections-chart";
-import { InspectionStatusDistribution } from "../(overview)/_components/inspection-status-distribution";
 import { InspectionDataWrapper } from "./_components/inspection-data-wrapper";
 import { ProjectSummaryWrapper } from "~/components/project-summary-wrapper";
+import ChartSectionWrapper from "./_components/chart-section-wrapper";
 
 import { inspectionSearchParamsCache } from "~/lib/search-params";
 import type { SearchParams } from "nuqs/server";
@@ -39,11 +38,8 @@ export default async function InspectionsPage({ searchParams }: PageProps) {
         {/* Summary Cards */}
         <InspectionStatCards />
 
-        {/* Monthly Inspections Bar Chart */}
-        <div className="space-y-4 md:grid md:grid-cols-2 md:gap-4 md:space-y-0">
-          <InspectionStatusDistribution />
-          <MonthlyInspectionsChart />
-        </div>
+        {/* Charts Section */}
+        <ChartSectionWrapper />
 
         {/* Filters & Table */}
         <InspectionDataWrapper />
