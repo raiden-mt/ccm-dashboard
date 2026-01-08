@@ -165,7 +165,7 @@ export function LoginForm({
               )}
             </Button>
 
-            {/* <div className="text-center text-sm">
+            <div className="text-center text-sm">
               Don&apos;t have an account?{" "}
               <Link
                 href="/auth/sign-up"
@@ -173,7 +173,7 @@ export function LoginForm({
               >
                 Sign up
               </Link>
-            </div> */}
+            </div>
           </div>
         </CardContent>
       </Card>
