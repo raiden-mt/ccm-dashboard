@@ -3,7 +3,10 @@ import { getCurrentUser } from "~/lib/services/supabase/lib/getCurrentUser";
 import { InspectionStatCards } from "./_components/inspection-stat-cards";
 import { InspectionDataWrapper } from "./_components/inspection-data-wrapper";
 import { ProjectSummaryWrapper } from "~/components/project-summary-wrapper";
-import ChartSectionWrapper from "./_components/chart-section-wrapper";
+import ChartSectionWrapper, {
+  ChartSectionWrapperSkeleton,
+} from "./_components/chart-section-wrapper";
+import { Suspense } from "react";
 
 import { inspectionSearchParamsCache } from "~/lib/search-params";
 import type { SearchParams } from "nuqs/server";
@@ -39,7 +42,9 @@ export default async function InspectionsPage({ searchParams }: PageProps) {
         <InspectionStatCards />
 
         {/* Charts Section */}
-        <ChartSectionWrapper />
+        <Suspense fallback={<ChartSectionWrapperSkeleton />}>
+          <ChartSectionWrapper />
+        </Suspense>
 
         {/* Filters & Table */}
         <InspectionDataWrapper />
