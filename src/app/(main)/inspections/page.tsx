@@ -40,7 +40,7 @@ export default async function InspectionsPage({ searchParams }: PageProps) {
         <InspectionStatCards />
 
         {/* Monthly Inspections Bar Chart */}
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="space-y-4 md:grid md:grid-cols-2 md:gap-4 md:space-y-0">
           <InspectionStatusDistribution />
           <MonthlyInspectionsChart />
         </div>
