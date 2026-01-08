@@ -1,8 +1,41 @@
 import { createAdminClient } from "~/lib/services/supabase/server";
 import { ProjectSummaryRealtime } from "./project-summary-realtime";
 import { ProjectSummaryInline } from "./project-summary-inline";
+import { Skeleton } from "~/components/ui/skeleton";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 
 export type ProjectSummaryVariant = "dialog" | "inline";
+
+export function ProjectSummarySkeleton({
+  variant = "dialog",
+}: {
+  variant?: ProjectSummaryVariant;
+}) {
+  if (variant === "inline") {
+    return (
+      <Card className="gap-2">
+        <CardHeader className="py-0">
+          <CardTitle className="text-lg font-semibold">
+            CCM Project Summary
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="py-0">
+          <div className="grid grid-cols-3 gap-3 sm:grid-cols-5 lg:grid-cols-9">
+            {Array.from({ length: 9 }).map((_, i) => (
+              <div key={i} className="space-y-2 p-2">
+                <Skeleton className="h-3 w-16" />
+                <Skeleton className="h-7 w-12" />
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  // Dialog variant - just a button skeleton
+  return <Skeleton className="h-10 w-36" />;
+}
 
 export async function ProjectSummaryWrapper({
   year,

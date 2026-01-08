@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
+import { Skeleton } from "~/components/ui/skeleton";
 import {
   type ChartConfig,
   ChartContainer,
@@ -16,6 +17,42 @@ import {
   ChartLegendContent,
 } from "~/components/ui/chart";
 import { Bar, BarChart, XAxis, YAxis, CartesianGrid } from "recharts";
+
+export function MonthlyInspectionsChartSkeleton() {
+  return (
+    <Card>
+      <CardHeader>
+        <div className="flex items-start justify-between">
+          <div className="space-y-1">
+            <CardTitle>Monthly Inspections</CardTitle>
+            <CardDescription>
+              Inspections completed per month with stove usage status
+            </CardDescription>
+          </div>
+          <div className="space-y-1 text-right">
+            <Skeleton className="ml-auto h-7 w-16" />
+            <Skeleton className="ml-auto h-4 w-32" />
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <div className="flex h-[320px] items-end justify-between gap-2 px-8 py-4">
+          {Array.from({ length: 12 }).map((_, i) => (
+            <div key={i} className="flex flex-1 flex-col items-center gap-2">
+              <Skeleton
+                className="w-full"
+                style={{
+                  height: `${Math.random() * 150 + 80}px`,
+                }}
+              />
+              <Skeleton className="h-3 w-6" />
+            </div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
 
 // Monthly inspection data with realistic distribution across the year
 // Shows inspections per month with CCM usage breakdown

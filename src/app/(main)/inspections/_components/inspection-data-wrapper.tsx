@@ -2,6 +2,64 @@ import { createAdminClient } from "~/lib/services/supabase/server";
 import { InspectionDataClient } from "./inspection-data-client";
 import { InspectionDataErrorState } from "./inspection-data-error-state";
 import { inspectionSearchParamsCache } from "~/lib/search-params";
+import { Skeleton } from "~/components/ui/skeleton";
+import { Card, CardContent, CardHeader } from "~/components/ui/card";
+
+export function InspectionDataWrapperSkeleton() {
+  return (
+    <Card>
+      <CardHeader>
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="space-y-1">
+            <Skeleton className="h-6 w-40" />
+            <Skeleton className="h-4 w-64" />
+          </div>
+          <Skeleton className="h-10 w-32" />
+        </div>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {/* Filters skeleton */}
+        <div className="flex flex-wrap gap-3">
+          <Skeleton className="h-10 w-40" />
+          <Skeleton className="h-10 w-40" />
+          <Skeleton className="h-10 w-32" />
+          <Skeleton className="h-10 w-32" />
+        </div>
+
+        {/* Table skeleton */}
+        <div className="rounded-md border">
+          {/* Table header */}
+          <div className="bg-muted/50 flex gap-4 border-b p-4">
+            {Array.from({ length: 7 }).map((_, i) => (
+              <Skeleton key={i} className="h-4 flex-1" />
+            ))}
+          </div>
+          {/* Table rows */}
+          {Array.from({ length: 8 }).map((_, rowIndex) => (
+            <div
+              key={rowIndex}
+              className="flex gap-4 border-b p-4 last:border-b-0"
+            >
+              {Array.from({ length: 7 }).map((_, colIndex) => (
+                <Skeleton key={colIndex} className="h-4 flex-1" />
+              ))}
+            </div>
+          ))}
+        </div>
+
+        {/* Pagination skeleton */}
+        <div className="flex items-center justify-between">
+          <Skeleton className="h-4 w-32" />
+          <div className="flex gap-2">
+            <Skeleton className="h-10 w-10" />
+            <Skeleton className="h-10 w-10" />
+            <Skeleton className="h-10 w-10" />
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
 
 export async function InspectionDataWrapper() {
   const [filterNamesResult, inspectionDataResult] = await Promise.all([

@@ -7,7 +7,32 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
+import { Skeleton } from "~/components/ui/skeleton";
 import { dashboardStats } from "~/lib/mock-data";
+
+export function SurveyCompletionSkeleton() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Survey Completion</CardTitle>
+        <CardDescription>Total surveys completed this year</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-4">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="space-y-2">
+              <div className="flex items-center justify-between">
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-4 w-12" />
+              </div>
+              <Skeleton className="h-2 w-full rounded-full" />
+            </div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
 
 export function SurveyCompletion() {
   const stats = dashboardStats;

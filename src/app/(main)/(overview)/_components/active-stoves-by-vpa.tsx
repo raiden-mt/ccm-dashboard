@@ -7,7 +7,31 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
+import { Skeleton } from "~/components/ui/skeleton";
 import { vpaStoveSummary } from "~/lib/mock-data";
+
+export function ActiveStovesByVPASkeleton() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Active Stoves by VPA</CardTitle>
+        <CardDescription>
+          Current vs target stove counts per VPA area
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="h-[300px] space-y-4 py-4">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="flex items-center gap-4">
+              <Skeleton className="h-4 w-20 shrink-0" />
+              <Skeleton className="h-6 flex-1" />
+            </div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
 import {
   Bar,
   BarChart,

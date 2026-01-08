@@ -6,6 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
+import { Skeleton } from "~/components/ui/skeleton";
 import {
   ClipboardCheck,
   TrendingUp,
@@ -14,6 +15,25 @@ import {
   XCircle,
 } from "lucide-react";
 import { inspections } from "~/lib/mock-data";
+
+export function InspectionStatCardsSkeleton() {
+  return (
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {Array.from({ length: 4 }).map((_, i) => (
+        <Card key={i}>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <Skeleton className="h-4 w-28" />
+            <Skeleton className="h-4 w-4" />
+          </CardHeader>
+          <CardContent className="space-y-2">
+            <Skeleton className="h-8 w-16" />
+            <Skeleton className="h-3 w-32" />
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  );
+}
 
 export function InspectionStatCards() {
   const goodConditionCount = inspections.filter(
