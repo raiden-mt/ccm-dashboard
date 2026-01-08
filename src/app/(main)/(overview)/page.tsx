@@ -2,12 +2,19 @@ import { redirect } from "next/navigation";
 import { getCurrentUser } from "~/lib/services/supabase/lib/getCurrentUser";
 import { loadSearchParams } from "~/lib/search-params";
 import type { SearchParams } from "nuqs/server";
-import { ProjectSummaryWrapper } from "~/components/project-summary-wrapper";
-import { StatCardsWrapper } from "./_components/dashboard-stat-cards";
+import {
+  ProjectSummarySkeleton,
+  ProjectSummaryWrapper,
+} from "~/components/project-summary-wrapper";
+import {
+  StatCardsSkeleton,
+  StatCardsWrapper,
+} from "./_components/dashboard-stat-cards";
 import { InspectionStatusDistribution } from "./_components/inspection-status-distribution";
 import { ActiveStovesByVPA } from "./_components/active-stoves-by-vpa";
 import { SurveyCompletion } from "./_components/survey-completion";
 import { DataQualityAlerts } from "./_components/data-quality-alerts";
+import { Suspense } from "react";
 
 type PageProps = {
   searchParams: Promise<SearchParams>;
@@ -35,10 +42,14 @@ export default async function DashboardPage({ searchParams }: PageProps) {
         </div>
 
         {/* Project Summary Stats - Inline */}
-        <ProjectSummaryWrapper year={year} variant="inline" />
+        <Suspense fallback={<ProjectSummarySkeleton />}>
+          <ProjectSummaryWrapper year={year} variant="inline" />
+        </Suspense>
 
         {/* Key Metrics */}
-        <StatCardsWrapper year={String(year)} />
+        <Suspense fallback={<StatCardsSkeleton />}>
+          <StatCardsWrapper year={String(year)} />
+        </Suspense>
 
         {/* Charts Row */}
         <div className="grid gap-6 lg:grid-cols-2">
