@@ -1,7 +1,8 @@
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "~/lib/services/supabase/lib/getCurrentUser";
 import { InspectionStatCards } from "./_components/inspection-stat-cards";
-import { InspectionTrendsChart } from "./_components/inspection-trends-chart";
+import { MonthlyInspectionsChart } from "./_components/monthly-inspections-chart";
+import { InspectionStatusDistribution } from "../(overview)/_components/inspection-status-distribution";
 import { InspectionDataWrapper } from "./_components/inspection-data-wrapper";
 import { ProjectSummaryWrapper } from "~/components/project-summary-wrapper";
 
@@ -38,8 +39,11 @@ export default async function InspectionsPage({ searchParams }: PageProps) {
         {/* Summary Cards */}
         <InspectionStatCards />
 
-        {/* Trend Chart */}
-        <InspectionTrendsChart />
+        {/* Monthly Inspections Bar Chart */}
+        <div className="grid gap-4 md:grid-cols-2">
+          <InspectionStatusDistribution />
+          <MonthlyInspectionsChart />
+        </div>
 
         {/* Filters & Table */}
         <InspectionDataWrapper />
