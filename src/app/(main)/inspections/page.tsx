@@ -9,7 +9,6 @@ import { ProjectSummaryWrapper } from "~/components/project-summary-wrapper";
 import ChartSectionWrapper, {
   ChartSectionWrapperSkeleton,
 } from "./_components/chart-section-wrapper";
-import { Suspense } from "react";
 
 import { inspectionSearchParamsCache } from "~/lib/search-params";
 import type { SearchParams } from "nuqs/server";
