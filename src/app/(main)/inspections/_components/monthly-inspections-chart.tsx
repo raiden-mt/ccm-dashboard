@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import {
-  ChartConfig,
+  type ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
@@ -99,7 +99,9 @@ export function MonthlyInspectionsChart() {
               tickMargin={8}
               width={48}
               tickFormatter={(value) =>
-                value >= 1000 ? `${(value / 1000).toFixed(1)}k` : value
+                Number(value) >= 1000
+                  ? `${(Number(value) / 1000).toFixed(1)}k`
+                  : String(value)
               }
             />
             <ChartTooltip
@@ -107,13 +109,18 @@ export function MonthlyInspectionsChart() {
                 <ChartTooltipContent
                   labelFormatter={(label) => `${label} 2025`}
                   formatter={(value, name, item, index, payload) => {
-                    const total =
-                      (payload as { ccmInUse: number; ccmNotInUse: number })
-                        .ccmInUse +
-                      (payload as { ccmInUse: number; ccmNotInUse: number })
-                        .ccmNotInUse;
+                    const payloadData =
+                      payload && Array.isArray(payload) && payload[0]
+                        ? (payload[0] as unknown as {
+                            ccmInUse: number;
+                            ccmNotInUse: number;
+                          })
+                        : null;
+                    const total = payloadData
+                      ? payloadData.ccmInUse + payloadData.ccmNotInUse
+                      : Number(value);
                     const percentage = ((Number(value) / total) * 100).toFixed(
-                      1
+                      1,
                     );
                     return (
                       <div className="flex w-full items-center justify-between gap-4">
