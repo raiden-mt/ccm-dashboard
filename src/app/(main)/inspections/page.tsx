@@ -29,8 +29,7 @@ export default async function InspectionsPage({ searchParams }: PageProps) {
               Inspections
             </h2>
             <p className="text-muted-foreground">
-              Request inspection data and results per period (Requirements #10,
-              #11)
+              Request inspection data and results per period
             </p>
           </div>
           <ProjectSummaryWrapper variant="dialog" year={year} />
