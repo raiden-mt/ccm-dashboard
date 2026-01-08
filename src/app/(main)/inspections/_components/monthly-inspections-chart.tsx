@@ -144,15 +144,15 @@ export function MonthlyInspectionsChart() {
             />
             <ChartLegend content={<ChartLegendContent />} />
             <Bar
-              dataKey="ccmInUse"
-              stackId="inspections"
-              fill="var(--color-ccmInUse)"
-              radius={[0, 0, 0, 0]}
-            />
-            <Bar
               dataKey="ccmNotInUse"
               stackId="inspections"
               fill="var(--color-ccmNotInUse)"
+              radius={[0, 0, 4, 4]}
+            />
+            <Bar
+              dataKey="ccmInUse"
+              stackId="inspections"
+              fill="var(--color-ccmInUse)"
               radius={[4, 4, 0, 0]}
             />
           </BarChart>
